@@ -13,20 +13,27 @@ import {
 } from "@mui/material";
 import React from "react";
 import { NavLink } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import { useSendLogoutMutation } from "../../redux/auth/authApiSlice";
 
 const menu = [
   {
     path: "/",
-    title: "Control",
+    title: "Thống kê",
   },
   {
-    path: "statistics",
-    title: "Statistics",
+    path: "/control",
+    title: "Điều khiển",
+  },
+  {
+    path: "/users",
+    title: "Nhân viên",
   },
 ];
 
 const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -34,9 +41,19 @@ const Header = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const [sendLogout, { isError, error }] = useSendLogoutMutation();
+
+  const handleLogout = async () => {
+    try {
+      await sendLogout();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <React.Fragment>
-      <Box>
+      <Box sx={{ p: 2 }}>
         <Stack
           direction={"row"}
           alignItems={"center"}
@@ -51,6 +68,9 @@ const Header = () => {
               )}
             </NavLink>
           ))}
+          <Button variant={"text"} onClick={handleLogout}>
+            Thoát
+          </Button>
         </Stack>
       </Box>
     </React.Fragment>

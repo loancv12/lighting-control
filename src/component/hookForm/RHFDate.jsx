@@ -11,10 +11,7 @@ registerLocale("vi", vi);
 
 export default function RHFDate({ name, label, helperText, ...other }) {
   const { control } = useFormContext();
-  const handleChangeRaw = (date) => {
-    console.log(date.currentTarget.value);
-    date.currentTarget.value = format(this.props.input.value, "DD/MM/YYYY");
-  };
+
   return (
     <Controller
       render={({

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,6 +10,8 @@ import {
   Legend,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { useGetPpfdsQuery } from "../../redux/ppfd/ppfdApiSlice";
+import { useGetConfigQuery } from "../../redux/config/configApiSlice";
 
 ChartJS.register(
   CategoryScale,
@@ -49,6 +51,9 @@ export const data = {
 };
 
 const Statistics = () => {
+  // const { data: ppfds } = useGetPpfdsQuery();
+  const { data: config, isLoading, isFetching, isError } = useGetConfigQuery();
+  console.log(config, isLoading, isFetching, isError);
   return <Line options={options} data={data} />;
 };
 
