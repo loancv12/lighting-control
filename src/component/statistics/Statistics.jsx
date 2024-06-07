@@ -1,60 +1,111 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Line } from "react-chartjs-2";
+  Box,
+  Button,
+  CircularProgress,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { useGetPpfdsQuery } from "../../redux/ppfd/ppfdApiSlice";
-import { useGetConfigQuery } from "../../redux/config/configApiSlice";
+import LoadingScreen from "../LoadingScreen";
+import { formatDate } from "../../utils/formatDate";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-);
+import SingleChart from "./SingleChart";
+import SelectDate from "./SelectDate";
+import SelectDates from "./SelectDates";
 
-export const options = {
-  responsive: true,
-  plugins: {
-    legend: {
-      position: "top",
-    },
-    title: {
-      display: true,
-      text: "Biểu đồ PPFD",
-    },
-  },
-};
-
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Dataset 2",
-      data: labels.map((i) => Math.random() * 100),
-      borderColor: "rgb(53, 162, 235)",
-      backgroundColor: "rgba(53, 162, 235, 0.5)",
-    },
-  ],
-};
-
+export const maxPeriod = 24; // 24 point in a day in ppfd chart
+export const datePeriod = 4; // 4 day in dli chart
 const Statistics = () => {
-  // const { data: ppfds } = useGetPpfdsQuery();
-  const { data: config, isLoading, isFetching, isError } = useGetConfigQuery();
-  console.log(config, isLoading, isFetching, isError);
-  return <Line options={options} data={data} />;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const date = today.toISOString();
+
+  const [selectDate, setSelectDate] = useState(date);
+  const [selectDates, setSelectDates] = useState({
+    startDate: "",
+    endDate: date,
+  });
+  const [page, setPage] = useState(0);
+  const [period, setPeriod] = useState(16);
+  const {
+    data: ppfds,
+    isLoading,
+    isError,
+    refetch,
+    error,
+  } = useGetPpfdsQuery(selectDate);
+
+  const startI = page * period;
+  const chunk = ppfds?.ids?.slice(startI, startI + period);
+  const numberOfData = ppfds?.ids?.length;
+
+  const labels = chunk?.map((id) => {
+    const record = ppfds?.entities[id];
+    return formatDate(record.createdAt);
+  });
+
+  const naturalPpfds = chunk?.map((id) => {
+    const record = ppfds?.entities[id];
+    return record.oldPpfd;
+  });
+
+  const slPpfds = chunk?.map((id) => {
+    const record = ppfds?.entities[id];
+    return record.newPpfd;
+  });
+
+  const onSubmit = (data) => {
+    console.log(data);
+    setSelectDate(data.selectDate.toISOString());
+  };
+
+  const onSubmitDli = (data) => {
+    console.log(data);
+  };
+
+  let content;
+  if (isLoading) {
+    content = <LoadingScreen />;
+  } else if (isError) {
+    content = <Typography variant="body2">Some thing wrong.</Typography>;
+  } else {
+    content = (
+      <>
+        <Stack spacing={2}>
+          <Stack
+            direction={"row"}
+            spacing={2}
+            alignItems={"center"}
+            justifyContent={"space-between"}
+          >
+            <SelectDate onSubmit={onSubmit} />
+            <SelectDates onSubmit={onSubmitDli} />
+          </Stack>
+          <SingleChart
+            labels={labels}
+            naturals={naturalPpfds}
+            afterSLs={slPpfds}
+            refetch={refetch}
+            setPage={setPage}
+            setPeriod={setPeriod}
+            numberOfData={numberOfData}
+          />
+          <SingleChart
+            labels={labels}
+            naturals={naturalPpfds}
+            afterSLs={slPpfds}
+            refetch={refetch}
+            setPage={setPage}
+            setPeriod={setPeriod}
+            numberOfData={numberOfData}
+          />
+        </Stack>
+      </>
+    );
+  }
+  return content;
 };
 
 export default Statistics;

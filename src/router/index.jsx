@@ -11,6 +11,7 @@ import HeaderLayout from "../component/layout/HeaderLayout";
 import CenterLayout from "../component/layout/CenterLayout";
 import Unauthorized from "../component/auth/Unauthorized";
 import NotFound from "../component/NotFound";
+import Prefetch from "../component/auth/Prefetch";
 
 const Router = () => {
   return (
@@ -22,24 +23,34 @@ const Router = () => {
         </Route>
         <Route element={<HeaderLayout />}>
           <Route
-            element={<RequiredAuth allowedRoles={[ROLES.Admin, ROLES.User]} />}
+            element={<RequiredAuth allowedRoles={[...Object.values(ROLES)]} />}
           >
-            <Route
-              path="/control"
-              element={
-                <SocketProvider>
-                  <Control />
-                </SocketProvider>
-              }
-            />
-          </Route>
-          <Route
-            element={<RequiredAuth allowedRoles={[ROLES.Admin, ROLES.User]} />}
-          >
-            <Route path="/" element={<Statistics />} />
-          </Route>
-          <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
-            <Route path="/users" element={<Users />} />
+            <Route element={<Prefetch />}>
+              <Route
+                element={
+                  <RequiredAuth allowedRoles={[ROLES.Admin, ROLES.User]} />
+                }
+              >
+                <Route
+                  path="/control"
+                  element={
+                    <SocketProvider>
+                      <Control />
+                    </SocketProvider>
+                  }
+                />
+              </Route>
+              <Route
+                element={
+                  <RequiredAuth allowedRoles={[ROLES.Admin, ROLES.User]} />
+                }
+              >
+                <Route path="/" element={<Statistics />} />
+              </Route>
+              <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
+                <Route path="/users" element={<Users />} />
+              </Route>
+            </Route>
           </Route>
         </Route>
         <Route path="/unauthorized" element={<Unauthorized />} />

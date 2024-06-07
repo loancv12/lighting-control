@@ -1,4 +1,11 @@
-import { Button, Paper, Stack, TextField, Typography } from "@mui/material";
+import {
+  Button,
+  CircularProgress,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React, { useContext } from "react";
 import RHFTextField from "../hookForm/RHFTextField";
 import RHFSelect from "../hookForm/RHFSelect";
@@ -8,8 +15,27 @@ import RHFDate from "../hookForm/RHFDate";
 import { useForm } from "react-hook-form";
 import FormProvider from "../hookForm/FormProvider";
 import { SocketContext } from "../../context/SocketProvider";
+import { useGetConfigQuery } from "../../redux/config/configApiSlice";
+import LoadingScreen from "../LoadingScreen";
 
 const Control = () => {
+  const now = new Date();
+  const defaultConfig = {
+    startLightingDate: now,
+    endLightingDate: now,
+    mode: "early-morning",
+    dliTarget: 22,
+    ppfdLamp: 300,
+    saturatedPpfd: 500,
+  };
+  const {
+    data: config = defaultConfig,
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useGetConfigQuery();
+  console.log("error", error);
   const socket = useContext(SocketContext);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -62,21 +88,21 @@ const Control = () => {
       ),
   });
 
-  const now = new Date();
-  console.log(now);
-  const [month, day, year] = [now.getMonth(), now.getDate(), now.getFullYear()];
-  console.log(month, day, year);
-  // const timeLighting=new Date()
-
+  const {
+    startLightingDate,
+    endLightingDate,
+    mode,
+    dliTarget,
+    ppfdLamp,
+    saturatedPpfd,
+  } = config;
   const defaultValues = {
-    startLightingDate: now,
-    endLightingDate: now,
-    // startLightingTime: new Date(year, month, day, 3),
-    // endLightingTime: new Date(year, month, day, 18),
-    mode: "early-morning",
-    dliTarget: 22,
-    ppfdLamp: 300,
-    saturatedPpfd: 300,
+    startLightingDate,
+    endLightingDate,
+    mode,
+    dliTarget,
+    ppfdLamp,
+    saturatedPpfd,
   };
 
   const modeOptions = [
@@ -105,49 +131,49 @@ const Control = () => {
   console.log(errors);
   const onSubmit = (data) => {
     console.log("submit", data);
-    socket.emit("change-config", data);
+    socket.emit("change-config", data, () => {
+      refetch();
+    });
   };
-  return (
-    <FormProvider
-      methods={methods}
-      component={"form"}
-      onSubmit={handleSubmit(onSubmit)}
-    >
-      <RHFDate name="startLightingDate" label={"Ngày bắt đầu chiếu bổ sung"} />
-      <RHFDate name="endLightingDate" label={"Ngày kết thúc chiếu bổ dung"} />
-      <RHFTextField name="dliTarget" label="DLI tối ưu" />
-      <RHFTextField name="ppfdLamp" label="PPFD của đèn" />
-      <RHFTextField name="saturatedPpfd" label="PPFD bão hòa" />
-      <RHFSelect name="mode" options={modeOptions} label="Mode" />
-      {/* <Stack
-        spacing={1}
-        justifyContent={"flex-start"}
-        sx={{
-          "& .react-datepicker__input-container input": {
-            fontSize: "0.75rem",
-            padding: "4px",
-          },
-        }}
+
+  let content;
+  if (isLoading) {
+    content = <LoadingScreen />;
+  } else if (isError) {
+    content = (
+      <Typography variant="body2">There are some thing wrong</Typography>
+    );
+  } else {
+    content = (
+      <FormProvider
+        methods={methods}
+        component={"form"}
+        onSubmit={handleSubmit(onSubmit)}
       >
-        <RHFTime name="startLightingTime" label="Thời điểm bắt đầu chiếu" />
-        <RHFTime name="endLightingTime" label="Thời điểm kết thúc chiếu" />
-        <Typography variant="subtitle2" sx={{ color: "red" }}>
-          Lưu ý, việc thay đổi 2 giá trị trên sẽ làm mất tác dụng của các mode
-          đã đề cập. Do vậy mà cần cẩn trọng khi đưa ra quyết định thay đổi các
-          giá trị
-        </Typography>
-      </Stack> */}
-      <Button
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-      >
-        Gửi
-      </Button>
-    </FormProvider>
-  );
+        <RHFDate
+          name="startLightingDate"
+          label={"Ngày bắt đầu chiếu bổ sung"}
+        />
+        <RHFDate name="endLightingDate" label={"Ngày kết thúc chiếu bổ dung"} />
+        <RHFTextField name="dliTarget" label="DLI tối ưu" />
+        <RHFTextField name="ppfdLamp" label="PPFD của đèn" />
+        <RHFTextField name="saturatedPpfd" label="PPFD bão hòa" />
+        <RHFSelect name="mode" options={modeOptions} label="Mode" />
+
+        <Button
+          fullWidth
+          color="inherit"
+          size="large"
+          type="submit"
+          variant="contained"
+        >
+          Gửi
+        </Button>
+      </FormProvider>
+    );
+  }
+
+  return content;
 };
 
 export default Control;

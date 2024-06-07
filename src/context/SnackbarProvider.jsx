@@ -26,7 +26,7 @@ const SnackbarProvider = ({ children }) => {
     <SnackbarContext.Provider
       value={{ open, message, severity, handleOpenSnackbar, handleClose }}
     >
-      {children};
+      {children}
     </SnackbarContext.Provider>
   );
 };

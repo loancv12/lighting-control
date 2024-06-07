@@ -5,11 +5,9 @@ import { Outlet } from "react-router-dom";
 
 function HeaderLayout() {
   return (
-    <Container maxWidth="sm">
-      {/* <Stack justifyContent={"center"} alignItems={"center"} maxWidth={"sm"}> */}
+    <Container maxWidth="lg">
       <Header />
       <Outlet />
-      {/* </Stack> */}
     </Container>
   );
 }

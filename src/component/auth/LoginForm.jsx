@@ -81,6 +81,7 @@ const LoginForm = () => {
         )}
         <RHFTextField
           name="username"
+          autoFocus
           fullWidth
           label="Tên đăng nhập"
           autoComplete="username"

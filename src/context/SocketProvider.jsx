@@ -1,10 +1,12 @@
-import { createContext, useEffect } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { BASE_URL } from "../config/api";
 import useAuth from "../hooks/useAuth";
 import { io } from "socket.io-client";
+import { SnackbarContext } from "./SnackbarProvider";
 export const SocketContext = createContext();
 
 const SocketProvider = ({ children }) => {
+  const { handleOpenSnackbar } = useContext(SnackbarContext);
   const { username } = useAuth();
   const options = {
     query: {
@@ -32,7 +34,10 @@ const SocketProvider = ({ children }) => {
     });
 
     socket.on("change-config-ret", (data) => {
-      console.log("change-config-ret", data);
+      handleOpenSnackbar({
+        message: data.message,
+        severity: "success",
+      });
     });
 
     return () => {

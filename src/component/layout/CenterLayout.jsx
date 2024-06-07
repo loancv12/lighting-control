@@ -1,8 +1,7 @@
-import { Box, Container } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import React from "react";
 import { Outlet } from "react-router-dom";
 import cover from "../../assets/background.png";
-
 const CenterLayout = () => {
   return (
     <Box

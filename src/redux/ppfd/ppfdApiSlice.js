@@ -8,14 +8,17 @@ const initialState = ppfdsAdapter.getInitialState();
 export const ppfdsApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getPpfds: builder.query({
-      query: () => ({
-        url: "/ppfds",
-        validateStatus: (response, result) => {
-          return response.status === 200 && !result.isError;
-        },
-      }),
+      query: (selectDate) => {
+        return {
+          url: "/ppfds",
+          params: { selectDate },
+          validateStatus: (response, result) => {
+            return response.status === 200 && !result.isError;
+          },
+        };
+      },
       transformResponse: (responseData) => {
-        const loadedPpfds = responseData.map((ppfd) => {
+        const loadedPpfds = responseData.data.map((ppfd) => {
           ppfd.id = ppfd._id;
           return ppfd;
         });
