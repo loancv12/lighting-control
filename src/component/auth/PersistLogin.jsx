@@ -16,18 +16,17 @@ const PersistLogin = () => {
 
   const [refresh, { isUninitialized, isLoading, isSuccess, isError, error }] =
     useRefreshMutation();
-  console.log(
-    "isUninitialized, isLoading, isSuccess, isError token trueSuccess",
-    isUninitialized,
-    isLoading,
-    isSuccess,
-    isError,
-    token,
-    trueSuccess
-  );
+  // console.log(
+  //   "isUninitialized, isLoading, isSuccess, isError token trueSuccess",
+  //   isUninitialized,
+  //   isLoading,
+  //   isSuccess,
+  //   isError,
+  //   token,
+  //   trueSuccess
+  // );
 
   useEffect(() => {
-    console.log("useEffect");
     if (
       firstMount.current === false ||
       process.env.NODE_ENV !== "development"
@@ -39,10 +38,7 @@ const PersistLogin = () => {
           await refresh().unwrap();
           console.log("run after refresh");
 
-          setTrueSuccess((prev) => {
-            console.log("run setTrueSuccess");
-            return true;
-          });
+          setTrueSuccess(true);
         } catch (error) {
           console.log(error);
         }
@@ -54,7 +50,6 @@ const PersistLogin = () => {
       firstMount.current = false;
     };
   }, []);
-  console.log(trueSuccess);
 
   let content;
   if (!persist) {

@@ -53,21 +53,6 @@ const Control = () => {
     mode: Yup.string()
       .oneOf(["early-morning", "evening"])
       .required("Giá trị mode là bắt buộc"),
-    // startLightingTime: Yup.date().required(
-    //   "Giá trị cho ngày bắt đầu việc chiếu sáng bổ sung là bắt buộc"
-    // ),
-    // .min(
-    //   Yup.ref("startLightingDate"),
-    //   "Ngày kết thúc chiếu phải sau ngày bắt đầu chiếu"
-    // )
-    // endLightingTime: Yup.date().required(
-    //   "Giá trị cho ngày bắt đầu việc chiếu sáng bổ sung là bắt buộc"
-    // ),
-    // .min(
-    //   Yup.ref("startLightingDate"),
-    //   "Ngày kết thúc chiếu phải sau ngày bắt đầu chiếu"
-    // )
-
     dliTarget: Yup.number(
       "giá trị cần điền là một số thực hoặc số nguyên dương"
     )

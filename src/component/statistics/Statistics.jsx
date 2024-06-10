@@ -35,7 +35,6 @@ const Statistics = () => {
     refetch: refetchPpfd,
   } = useGetPpfdsQuery(selectDate, {
     pollingInterval: 15 * 60 * 1000, //15m
-    refetchOnFocus: true,
   });
 
   const {
