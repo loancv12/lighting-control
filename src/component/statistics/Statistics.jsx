@@ -9,11 +9,11 @@ import {
 } from "@mui/material";
 import { useGetPpfdsQuery } from "../../redux/ppfd/ppfdApiSlice";
 import LoadingScreen from "../LoadingScreen";
-import { formatDate } from "../../utils/formatDate";
-
-import SingleChart from "./SingleChart";
+import PPFDChart from "./PPFDChart";
 import SelectDate from "./SelectDate";
 import SelectDates from "./SelectDates";
+import { useGetDlisQuery } from "../../redux/dli/dliApiSlice";
+import DLIChart from "./DLIChart";
 
 export const maxPeriod = 24; // 24 point in a day in ppfd chart
 export const datePeriod = 4; // 4 day in dli chart
@@ -22,85 +22,62 @@ const Statistics = () => {
   today.setHours(0, 0, 0, 0);
   const date = today.toISOString();
 
-  const [selectDate, setSelectDate] = useState(date);
   const [selectDates, setSelectDates] = useState({
-    startDate: "",
+    startDate: date,
     endDate: date,
   });
-  const [page, setPage] = useState(0);
-  const [period, setPeriod] = useState(16);
+  const [selectDate, setSelectDate] = useState(date);
+
   const {
     data: ppfds,
-    isLoading,
-    isError,
-    refetch,
-    error,
-  } = useGetPpfdsQuery(selectDate);
-
-  const startI = page * period;
-  const chunk = ppfds?.ids?.slice(startI, startI + period);
-  const numberOfData = ppfds?.ids?.length;
-
-  const labels = chunk?.map((id) => {
-    const record = ppfds?.entities[id];
-    return formatDate(record.createdAt);
+    isLoading: isLdPpfd,
+    isError: isErrorPpfd,
+    refetch: refetchPpfd,
+  } = useGetPpfdsQuery(selectDate, {
+    pollingInterval: 15 * 60 * 1000, //15m
+    refetchOnFocus: true,
   });
 
-  const naturalPpfds = chunk?.map((id) => {
-    const record = ppfds?.entities[id];
-    return record.oldPpfd;
-  });
+  const {
+    data: dlis,
+    isLoading: isLdDli,
+    isError: isErrorDli,
+    refetch: refetchDli,
+  } = useGetDlisQuery(selectDates);
+  console.log(dlis);
 
-  const slPpfds = chunk?.map((id) => {
-    const record = ppfds?.entities[id];
-    return record.newPpfd;
-  });
-
-  const onSubmit = (data) => {
+  const onSubmitPpfd = (data) => {
     console.log(data);
     setSelectDate(data.selectDate.toISOString());
   };
 
   const onSubmitDli = (data) => {
-    console.log(data);
+    setSelectDates({
+      startDate: data.startDate.toISOString(),
+      endDate: data.endDate.toISOString(),
+    });
   };
 
   let content;
-  if (isLoading) {
+  if (isLdDli || isLdDli) {
     content = <LoadingScreen />;
-  } else if (isError) {
+  } else if (isErrorPpfd || isErrorDli) {
     content = <Typography variant="body2">Some thing wrong.</Typography>;
   } else {
     content = (
       <>
-        <Stack spacing={2}>
+        <Stack spacing={1}>
           <Stack
-            direction={"row"}
+            direction={{ xs: "column", md: "row" }}
             spacing={2}
             alignItems={"center"}
             justifyContent={"space-between"}
           >
-            <SelectDate onSubmit={onSubmit} />
+            <SelectDate onSubmit={onSubmitPpfd} />
             <SelectDates onSubmit={onSubmitDli} />
           </Stack>
-          <SingleChart
-            labels={labels}
-            naturals={naturalPpfds}
-            afterSLs={slPpfds}
-            refetch={refetch}
-            setPage={setPage}
-            setPeriod={setPeriod}
-            numberOfData={numberOfData}
-          />
-          <SingleChart
-            labels={labels}
-            naturals={naturalPpfds}
-            afterSLs={slPpfds}
-            refetch={refetch}
-            setPage={setPage}
-            setPeriod={setPeriod}
-            numberOfData={numberOfData}
-          />
+          <PPFDChart ppfds={ppfds} refetch={refetchPpfd} />
+          <DLIChart dlis={dlis} refetch={refetchDli} />
         </Stack>
       </>
     );

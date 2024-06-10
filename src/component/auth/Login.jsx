@@ -4,6 +4,7 @@ import { Box, Container, Stack, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 function Login() {
+  console.log("login compo");
   return (
     <Stack
       spacing={2}

@@ -18,8 +18,7 @@ const Prefetch = () => {
     const selectDate = today.toISOString();
     store.dispatch(
       ppfdsApiSlice.util.prefetch("getPpfds", selectDate, {
-        force: false,
-        ifOlderThan: 15 * 60, // 15min
+        force: true,
       })
     );
   }, []);

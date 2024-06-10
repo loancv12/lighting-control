@@ -9,16 +9,31 @@ import {
 import React, { useState } from "react";
 import Charts from "./Charts";
 import { maxPeriod } from "./Statistics";
+import { onlyTime } from "../../utils/formatDate";
 
-const SingleChart = ({
-  labels,
-  naturals,
-  afterSLs,
-  refetch,
-  setPage,
-  setPeriod,
-  numberOfData,
-}) => {
+const PPFDChart = ({ ppfds, refetch }) => {
+  const [page, setPage] = useState(0);
+  const [period, setPeriod] = useState(16);
+
+  const startI = page * period;
+  const chunk = ppfds?.ids?.slice(startI, startI + period);
+  const numberOfData = ppfds?.ids?.length;
+
+  const labels = chunk?.map((id) => {
+    const record = ppfds?.entities[id];
+    return onlyTime(record.createdAt);
+  });
+
+  const naturals = chunk?.map((id) => {
+    const record = ppfds?.entities[id];
+    return record.oldPpfd;
+  });
+
+  const afterSLs = chunk?.map((id) => {
+    const record = ppfds?.entities[id];
+    return record.newPpfd;
+  });
+
   const handleRefetch = () => {
     refetch();
   };
@@ -73,7 +88,7 @@ const SingleChart = ({
       </Stack>
       <Box sx={{ height: "300px", width: "100%" }}>
         <Charts
-          title={"Bieu do PPFD"}
+          type={"PPFD"}
           labels={labels}
           naturals={naturals}
           afterSLs={afterSLs}
@@ -83,4 +98,4 @@ const SingleChart = ({
   );
 };
 
-export default SingleChart;
+export default PPFDChart;

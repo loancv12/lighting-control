@@ -43,7 +43,7 @@ const SelectDates = ({ onSubmit }) => {
       onSubmit={handleSubmit(onSubmit)}
     >
       <Stack
-        direction={"row"}
+        direction={{ xs: "column", md: "row" }}
         spacing={2}
         alignItems={"center"}
         justifyContent={"flex-start"}
@@ -51,7 +51,7 @@ const SelectDates = ({ onSubmit }) => {
         <Typography variant="body2">Biểu đồ DLI</Typography>
         <RHFDate name="startDate" label={"Từ ngày"} />
         <RHFDate name="endDate" label={"đến"} />
-        <IconButton type="submit">
+        <IconButton type="submit" sx={{ width: "40px !important" }}>
           <PaperPlaneRight size={24} />
         </IconButton>
       </Stack>

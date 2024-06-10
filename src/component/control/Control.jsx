@@ -150,11 +150,20 @@ const Control = () => {
         component={"form"}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <RHFDate
-          name="startLightingDate"
-          label={"Ngày bắt đầu chiếu bổ sung"}
-        />
-        <RHFDate name="endLightingDate" label={"Ngày kết thúc chiếu bổ dung"} />
+        <Stack
+          direction={{ xs: "column", md: "row" }}
+          width={"100%"}
+          spacing={{ xs: 2, md: 8 }}
+        >
+          <RHFDate
+            name="startLightingDate"
+            label={"Ngày bắt đầu chiếu bổ sung"}
+          />
+          <RHFDate
+            name="endLightingDate"
+            label={"Ngày kết thúc chiếu bổ dung"}
+          />
+        </Stack>
         <RHFTextField name="dliTarget" label="DLI tối ưu" />
         <RHFTextField name="ppfdLamp" label="PPFD của đèn" />
         <RHFTextField name="saturatedPpfd" label="PPFD bão hòa" />

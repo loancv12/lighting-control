@@ -12,6 +12,7 @@ import CenterLayout from "../component/layout/CenterLayout";
 import Unauthorized from "../component/auth/Unauthorized";
 import NotFound from "../component/NotFound";
 import Prefetch from "../component/auth/Prefetch";
+import PersistLogin from "../component/auth/PersistLogin";
 
 const Router = () => {
   return (
@@ -22,33 +23,37 @@ const Router = () => {
           <Route path="/register" element={<Register />} />
         </Route>
         <Route element={<HeaderLayout />}>
-          <Route
-            element={<RequiredAuth allowedRoles={[...Object.values(ROLES)]} />}
-          >
-            <Route element={<Prefetch />}>
-              <Route
-                element={
-                  <RequiredAuth allowedRoles={[ROLES.Admin, ROLES.User]} />
-                }
-              >
+          <Route element={<PersistLogin />}>
+            <Route
+              element={
+                <RequiredAuth allowedRoles={[...Object.values(ROLES)]} />
+              }
+            >
+              <Route element={<Prefetch />}>
                 <Route
-                  path="/control"
                   element={
-                    <SocketProvider>
-                      <Control />
-                    </SocketProvider>
+                    <RequiredAuth allowedRoles={[ROLES.Admin, ROLES.User]} />
                   }
-                />
-              </Route>
-              <Route
-                element={
-                  <RequiredAuth allowedRoles={[ROLES.Admin, ROLES.User]} />
-                }
-              >
-                <Route path="/" element={<Statistics />} />
-              </Route>
-              <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
-                <Route path="/users" element={<Users />} />
+                >
+                  <Route
+                    path="/control"
+                    element={
+                      <SocketProvider>
+                        <Control />
+                      </SocketProvider>
+                    }
+                  />
+                </Route>
+                <Route
+                  element={
+                    <RequiredAuth allowedRoles={[ROLES.Admin, ROLES.User]} />
+                  }
+                >
+                  <Route path="/" element={<Statistics />} />
+                </Route>
+                <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
+                  <Route path="/users" element={<Users />} />
+                </Route>
               </Route>
             </Route>
           </Route>

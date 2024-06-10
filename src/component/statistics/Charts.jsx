@@ -21,7 +21,7 @@ ChartJS.register(
   Legend
 );
 
-const Charts = ({ title, labels, naturals, afterSLs }) => {
+const Charts = ({ labels, naturals, afterSLs, type }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -31,7 +31,7 @@ const Charts = ({ title, labels, naturals, afterSLs }) => {
       },
       title: {
         display: true,
-        text: title,
+        text: `Biểu đồ ${type}`,
       },
     },
   };
@@ -40,13 +40,13 @@ const Charts = ({ title, labels, naturals, afterSLs }) => {
     labels,
     datasets: [
       {
-        label: "PPFD tự nhiên",
+        label: `${type} tự nhiên`,
         data: naturals,
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
       {
-        label: "PPFD sau khi bổ sung",
+        label: `${type} sau khi bổ sung`,
         data: afterSLs,
         borderColor: "rgb(53, 162, 5)",
         backgroundColor: "rgba(53, 162, 5, 0.5)",

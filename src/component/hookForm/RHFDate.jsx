@@ -18,20 +18,27 @@ export default function RHFDate({ name, label, helperText, ...other }) {
         field: { onChange, onBlur, value, ref },
         fieldState: { error },
       }) => (
-        <Stack spacing={1}>
+        <Stack spacing={1} width="100%">
           <Stack
             direction={"row"}
             spacing={2}
             alignItems={"center"}
+            justifyContent={"space-between"}
+            width="100%"
             sx={{
               // zIndex: 2,
               "& .react-datepicker__input-container input": {
                 padding: "16.5px 14px",
                 fontSize: "1rem",
+                outline: "transparent",
               },
 
               "& .react-datepicker-popper": {
                 zIndex: 2,
+              },
+
+              "& .react-datepicker__tab-loop": {
+                marginLeft: 0,
               },
             }}
           >
