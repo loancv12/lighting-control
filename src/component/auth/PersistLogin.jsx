@@ -16,15 +16,15 @@ const PersistLogin = () => {
 
   const [refresh, { isUninitialized, isLoading, isSuccess, isError, error }] =
     useRefreshMutation();
-  // console.log(
-  //   "isUninitialized, isLoading, isSuccess, isError token trueSuccess",
-  //   isUninitialized,
-  //   isLoading,
-  //   isSuccess,
-  //   isError,
-  //   token,
-  //   trueSuccess
-  // );
+  console.log(
+    "isUninitialized, isLoading, isSuccess, isError token trueSuccess",
+    isUninitialized,
+    isLoading,
+    isSuccess,
+    isError,
+    token,
+    trueSuccess
+  );
 
   useEffect(() => {
     if (
@@ -35,10 +35,10 @@ const PersistLogin = () => {
       const verifyRefreshToken = async () => {
         try {
           console.log("run refresh");
-          await refresh().unwrap();
+          await refresh();
           console.log("run after refresh");
 
-          setTrueSuccess(true);
+          // setTrueSuccess(true);
         } catch (error) {
           console.log(error);
         }
@@ -49,9 +49,9 @@ const PersistLogin = () => {
     return () => {
       firstMount.current = false;
     };
-  }, []);
+  }, [token]);
 
-  let content;
+  let content = "perstst";
   if (!persist) {
     content = <Outlet />;
   } else {
@@ -64,9 +64,9 @@ const PersistLogin = () => {
           <Navigate to="/login" />
         </>
       );
-    } else if (isSuccess && trueSuccess) {
+    } else if (isSuccess) {
       content = <Outlet />;
-    } else if (token && isUninitialized) {
+    } else if (token) {
       content = <Outlet />;
     }
   }

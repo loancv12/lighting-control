@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { setCredentials } from "./auth/authSlice";
+import { BASE_URL } from "../config/api";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://localhost:3000",
-  // baseUrl: "https://lighting-control-api.onrender.com",
+  baseUrl: BASE_URL,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;

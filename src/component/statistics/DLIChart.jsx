@@ -1,44 +1,55 @@
-import { Box, IconButton, Stack } from "@mui/material";
-import { ArrowClockwise } from "phosphor-react";
+import { Box, IconButton, Stack, Tooltip } from "@mui/material";
+import {
+  ArrowCircleDown,
+  ArrowCircleLeft,
+  ArrowCircleRight,
+  ArrowCircleUp,
+  ArrowClockwise,
+} from "phosphor-react";
+import React, { useEffect, useState } from "react";
 import Charts from "./Charts";
-import { onlyDate } from "../../utils/formatDate";
+import { onlyTime } from "../../utils/formatDate";
+import { memo } from "react";
+import ControlChart from "./ControlChart";
+import { defaultNumOfPoint } from "../../config/app";
 
-const DLIChart = ({ dlis, refetch }) => {
-  const labels = dlis?.ids?.map((id) => {
+const DLIChart = memo(({ dlis, refetch }) => {
+  const numberOfData = dlis?.ids?.length;
+
+  const [page, setPage] = useState(0);
+  const [period, setPeriod] = useState(defaultNumOfPoint);
+
+  const startI = page * period;
+  const chunk = dlis?.ids?.slice(startI, startI + period);
+
+  const labels = chunk?.map((id) => {
     const record = dlis?.entities[id];
-    return onlyDate(record.createdAt);
+    return onlyTime(record.createdAt);
   });
 
-  const naturals = dlis?.ids?.map((id) => {
+  const naturals = chunk?.map((id) => {
     const record = dlis?.entities[id];
     return record.oldDli;
   });
 
-  const afterSLs = dlis?.ids?.map((id) => {
+  const afterSLs = chunk?.map((id) => {
     const record = dlis?.entities[id];
     return record.newDli;
   });
 
-  const handleRefetch = () => {
-    refetch();
-  };
   return (
-    <Stack direction="row">
-      <Stack justifyContent={"center"}>
-        <IconButton onClick={handleRefetch}>
-          <ArrowClockwise size={32} />
-        </IconButton>
-      </Stack>
-      <Box sx={{ height: "300px", width: "100%" }}>
-        <Charts
-          type={"DLI"}
-          labels={labels}
-          naturals={naturals}
-          afterSLs={afterSLs}
-        />
-      </Box>
-    </Stack>
+    <ControlChart
+      numberOfData={numberOfData}
+      page={page}
+      setPage={setPage}
+      period={period}
+      setPeriod={setPeriod}
+      labels={labels}
+      naturals={naturals}
+      afterSLs={afterSLs}
+      refetch={refetch}
+    />
   );
-};
+});
 
 export default DLIChart;

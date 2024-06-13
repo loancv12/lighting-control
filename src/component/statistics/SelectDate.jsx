@@ -9,8 +9,6 @@ import { PaperPlane, PaperPlaneRight } from "phosphor-react";
 
 const SelectDate = ({ onSubmit }) => {
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const now = new Date();
 
   const defaultValues = {
     selectDate: today,
@@ -18,7 +16,7 @@ const SelectDate = ({ onSubmit }) => {
   const dateSchema = Yup.object({
     selectDate: Yup.date()
       .required("Giá trị là bắt buộc")
-      .max(now, "Ngày phải từ hiện tại đổ về trước"),
+      .max(today, "Ngày phải từ hiện tại đổ về trước"),
   });
 
   const methods = useForm({
@@ -43,7 +41,7 @@ const SelectDate = ({ onSubmit }) => {
         alignItems={"center"}
         justifyContent={"flex-start"}
       >
-        <RHFDate name="selectDate" label={"Biểu đồ PPFD"} />
+        <RHFDate name="selectDate" label={"PPFD"} />
         <IconButton type="submit">
           <PaperPlaneRight size={24} />
         </IconButton>

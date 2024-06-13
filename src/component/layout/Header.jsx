@@ -12,9 +12,11 @@ import {
   Button,
 } from "@mui/material";
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { useSendLogoutMutation } from "../../redux/auth/authApiSlice";
+import { green } from "@mui/material/colors";
+import logo from "../../../public/logo.svg";
 
 const menu = [
   {
@@ -58,7 +60,13 @@ const Header = () => {
           direction={"row"}
           alignItems={"center"}
           justifyContent={"center"}
+          spacing={2}
         >
+          <Link to={"/"}>
+            <Avatar sx={{ bgcolor: green[500] }} variant="rounded">
+              <img src={"/logo.svg"} alt="Lighting control" />
+            </Avatar>
+          </Link>
           {menu.map((el, i) => (
             <NavLink key={i} to={el.path}>
               {({ isActive, isPending, isTransitioning }) => (

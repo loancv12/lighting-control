@@ -6,24 +6,26 @@ import FormProvider from "../hookForm/FormProvider";
 import { useForm } from "react-hook-form";
 import { IconButton, Stack, Typography } from "@mui/material";
 import { PaperPlane, PaperPlaneRight } from "phosphor-react";
+import { sub } from "date-fns";
 
 const SelectDates = ({ onSubmit }) => {
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const now = new Date();
+  const date15DaysAgo = sub(today, {
+    days: 15,
+  });
 
   const defaultValues = {
-    startDate: today,
+    startDate: date15DaysAgo,
     endDate: today,
   };
   const dateSchema = Yup.object({
     startDate: Yup.date()
       .required("Giá trị là bắt buộc")
-      .max(now, "Ngày phải từ hiện tại đổ về trước"),
+      .max(today, "Ngày phải từ hiện tại đổ về trước"),
     endDate: Yup.date()
       .required("Giá trị là bắt buộc")
       .min(Yup.ref("startDate"), "Ngày phải lớn hơn ngày bắt đầu")
-      .max(now, "Ngày phải từ hiện tại đổ về trước"),
+      .max(today, "Ngày phải từ hiện tại đổ về trước"),
   });
 
   const methods = useForm({
@@ -48,7 +50,7 @@ const SelectDates = ({ onSubmit }) => {
         alignItems={"center"}
         justifyContent={"flex-start"}
       >
-        <Typography variant="body2">Biểu đồ DLI</Typography>
+        <Typography variant="body2">DLI</Typography>
         <RHFDate name="startDate" label={"Từ ngày"} />
         <RHFDate name="endDate" label={"đến"} />
         <IconButton type="submit" sx={{ width: "40px !important" }}>

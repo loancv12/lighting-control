@@ -39,8 +39,8 @@ const LoginForm = () => {
     password: Yup.string().required("Password is required"),
   });
   const defaultValues = {
-    username: "user1",
-    password: "demo123",
+    username: "",
+    password: "",
   };
 
   const methods = useForm({

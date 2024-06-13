@@ -14,19 +14,11 @@ import SelectDate from "./SelectDate";
 import SelectDates from "./SelectDates";
 import { useGetDlisQuery } from "../../redux/dli/dliApiSlice";
 import DLIChart from "./DLIChart";
+import { getDateNow, getDateNowAnd15Ago } from "../../utils/formatDate";
 
-export const maxPeriod = 24; // 24 point in a day in ppfd chart
-export const datePeriod = 4; // 4 day in dli chart
 const Statistics = () => {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const date = today.toISOString();
-
-  const [selectDates, setSelectDates] = useState({
-    startDate: date,
-    endDate: date,
-  });
-  const [selectDate, setSelectDate] = useState(date);
+  const [selectDates, setSelectDates] = useState(getDateNowAnd15Ago);
+  const [selectDate, setSelectDate] = useState(getDateNow);
 
   const {
     data: ppfds,
@@ -37,13 +29,15 @@ const Statistics = () => {
     pollingInterval: 15 * 60 * 1000, //15m
   });
 
+  console.log("ppfds", ppfds);
+
   const {
     data: dlis,
     isLoading: isLdDli,
     isError: isErrorDli,
     refetch: refetchDli,
   } = useGetDlisQuery(selectDates);
-  console.log(dlis);
+  console.log("dlis", dlis);
 
   const onSubmitPpfd = (data) => {
     console.log(data);
@@ -51,6 +45,7 @@ const Statistics = () => {
   };
 
   const onSubmitDli = (data) => {
+    console.log("onSubmitDli", data);
     setSelectDates({
       startDate: data.startDate.toISOString(),
       endDate: data.endDate.toISOString(),
@@ -58,7 +53,7 @@ const Statistics = () => {
   };
 
   let content;
-  if (isLdDli || isLdDli) {
+  if (isLdPpfd || isLdDli) {
     content = <LoadingScreen />;
   } else if (isErrorPpfd || isErrorDli) {
     content = <Typography variant="body2">Some thing wrong.</Typography>;
