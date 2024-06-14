@@ -26,11 +26,18 @@ const SocketProvider = ({ children }) => {
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
+    socket.on("connect_error", (err) => {
+      // the reason of the error, for example "xhr poll error"
+      console.log(err.message);
+
+      // some additional description, for example the status code of the initial HTTP response
+      console.log(err.description);
+
+      // some additional context, for example the XMLHttpRequest object
+      console.log(err.context);
+    });
     socket.on("error", (message) => {
       console.log(message);
-    });
-    socket.on("change-config", (data) => {
-      console.log("change-config");
     });
 
     socket.on("change-config-ret", (data) => {
@@ -43,7 +50,8 @@ const SocketProvider = ({ children }) => {
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off("change-config");
+      socket.off("connect_error");
+      socket.off("change-config-ret");
     };
   }, [username, socket]);
 

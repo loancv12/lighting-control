@@ -10,6 +10,7 @@ function LoadingScreen() {
         bottom: 0,
         left: 0,
         right: 0,
+        zIndex: 2,
       }}
       alignItems={"center"}
       justifyContent={"center"}

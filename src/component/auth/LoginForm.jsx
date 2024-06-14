@@ -10,6 +10,7 @@ import {
   InputAdornment,
   Link,
   Stack,
+  Typography,
 } from "@mui/material";
 import RHFTextField from "../hookForm/RHFTextField";
 import { Eye, EyeSlash } from "phosphor-react";
@@ -20,6 +21,7 @@ import usePersist from "../../hooks/usePersist";
 import FormProvider from "../hookForm/FormProvider";
 import { setCredentials } from "../../redux/auth/authSlice";
 import { SnackbarContext } from "../../context/SnackbarProvider";
+import LoadingScreen from "../LoadingScreen";
 
 const LoginForm = () => {
   const { handleOpenSnackbar } = useContext(SnackbarContext);
@@ -32,7 +34,7 @@ const LoginForm = () => {
     setPersist((prev) => !prev);
   };
 
-  const [login, { isLoading }] = useLoginMutation();
+  const [login, { isLoading, isError }] = useLoginMutation();
 
   const LoginSchema = Yup.object({
     username: Yup.string().required("Username is required"),
@@ -68,88 +70,92 @@ const LoginForm = () => {
       console.log(error);
       reset();
       setError("afterSubmit", {
-        message: error.data.message,
+        message: error.data.message ?? "Something wrong",
       });
     }
   };
 
   return (
-    <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
-      <Stack spacing={3} width={"100%"}>
-        {!!errors.afterSubmit && (
-          <Alert severity="error">{errors.afterSubmit.message}</Alert>
-        )}
-        <RHFTextField
-          name="username"
-          autoFocus
-          fullWidth
-          label="Tên đăng nhập"
-          autoComplete="username"
-        />
-        <RHFTextField
-          name="password"
-          label="Mật khẩu"
-          fullWidth
-          autoComplete="current-password"
-          type={showPassword ? "text" : "password"}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={(e) => setShowPassword((prev) => !prev)}>
-                  {showPassword ? <Eye /> : <EyeSlash />}
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-        />
-      </Stack>
-      <Stack
-        width={"100%"}
-        direction={"row"}
-        justifyContent={"space-between"}
-        alignItems={"center"}
-        sx={{ my: 2 }}
-      >
-        <label htmlFor="persist">
-          <input
-            type="checkbox"
-            className="form__checkbox"
-            id="persist"
-            onChange={handleToggle}
-            checked={persist}
+    <>
+      {isLoading ? <LoadingScreen /> : null}
+      {isError ? <Typography>Something wrong</Typography> : null}
+      <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+        <Stack spacing={3} width={"100%"}>
+          {!!errors.afterSubmit && (
+            <Alert severity="error">{errors.afterSubmit.message}</Alert>
+          )}
+          <RHFTextField
+            name="username"
+            autoFocus
+            fullWidth
+            label="Tên đăng nhập"
+            autoComplete="username"
           />
-          Ghi nhớ
-        </label>
-        <Link
-          variant="body2"
-          to="/auth/reset-password"
-          component={RouterLink}
-          color="inherit"
-          underline="always"
+          <RHFTextField
+            name="password"
+            label="Mật khẩu"
+            fullWidth
+            autoComplete="current-password"
+            type={showPassword ? "text" : "password"}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={(e) => setShowPassword((prev) => !prev)}>
+                    {showPassword ? <Eye /> : <EyeSlash />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Stack>
+        <Stack
+          width={"100%"}
+          direction={"row"}
+          justifyContent={"space-between"}
+          alignItems={"center"}
+          sx={{ my: 2 }}
         >
-          Quên mật khẩu
-        </Link>
-      </Stack>
-      <Button
-        fullWidth
-        color="inherit"
-        size="large"
-        type="submit"
-        variant="contained"
-        sx={{
-          bgcolor: "text.primary",
-          color: (theme) =>
-            theme.palette.mode === "light" ? "common.white" : "#000",
-          "&:hover": {
+          <label htmlFor="persist">
+            <input
+              type="checkbox"
+              className="form__checkbox"
+              id="persist"
+              onChange={handleToggle}
+              checked={persist}
+            />
+            Ghi nhớ
+          </label>
+          <Link
+            variant="body2"
+            to="/auth/reset-password"
+            component={RouterLink}
+            color="inherit"
+            underline="always"
+          >
+            Quên mật khẩu
+          </Link>
+        </Stack>
+        <Button
+          fullWidth
+          color="inherit"
+          size="large"
+          type="submit"
+          variant="contained"
+          sx={{
             bgcolor: "text.primary",
             color: (theme) =>
-              theme.palette.mode === "light" ? "common.white" : "grey.000",
-          },
-        }}
-      >
-        Đăng nhập
-      </Button>
-    </FormProvider>
+              theme.palette.mode === "light" ? "common.white" : "#000",
+            "&:hover": {
+              bgcolor: "text.primary",
+              color: (theme) =>
+                theme.palette.mode === "light" ? "common.white" : "grey.000",
+            },
+          }}
+        >
+          Đăng nhập
+        </Button>
+      </FormProvider>
+    </>
   );
 };
 

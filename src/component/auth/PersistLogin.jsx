@@ -16,15 +16,15 @@ const PersistLogin = () => {
 
   const [refresh, { isUninitialized, isLoading, isSuccess, isError, error }] =
     useRefreshMutation();
-  console.log(
-    "isUninitialized, isLoading, isSuccess, isError token trueSuccess",
-    isUninitialized,
-    isLoading,
-    isSuccess,
-    isError,
-    token,
-    trueSuccess
-  );
+  // console.log(
+  //   "isUninitialized, isLoading, isSuccess, isError token trueSuccess",
+  //   isUninitialized,
+  //   isLoading,
+  //   isSuccess,
+  //   isError,
+  //   token,
+  //   trueSuccess
+  // );
 
   useEffect(() => {
     if (
@@ -50,6 +50,8 @@ const PersistLogin = () => {
       firstMount.current = false;
     };
   }, [token]);
+
+  // console.log(process.env.API_URL);
 
   let content = "perstst";
   if (!persist) {
