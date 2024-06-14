@@ -8,7 +8,9 @@ export const SocketContext = createContext();
 const SocketProvider = ({ children }) => {
   const { handleOpenSnackbar } = useContext(SnackbarContext);
   const { username } = useAuth();
+
   const options = {
+    autoConnect: false,
     query: {
       username,
     },
@@ -16,6 +18,9 @@ const SocketProvider = ({ children }) => {
   const socket = io(BASE_URL, options);
 
   useEffect(() => {
+    if (!socket.connected) {
+      socket.connect();
+    }
     function onConnect() {
       console.log("socket connect", socket);
     }
@@ -35,9 +40,16 @@ const SocketProvider = ({ children }) => {
 
       // some additional context, for example the XMLHttpRequest object
       console.log(err.context);
+      handleOpenSnackbar({
+        message: "Something wrong",
+        severity: "error",
+      });
     });
     socket.on("error", (message) => {
-      console.log(message);
+      handleOpenSnackbar({
+        message: "Something wrong",
+        severity: "error",
+      });
     });
 
     socket.on("change-config-ret", (data) => {
@@ -48,12 +60,14 @@ const SocketProvider = ({ children }) => {
     });
 
     return () => {
+      console.log("unmount");
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
       socket.off("connect_error");
       socket.off("change-config-ret");
+      socket.disconnect();
     };
-  }, [username, socket]);
+  }, [username]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>

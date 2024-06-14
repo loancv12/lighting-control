@@ -25,6 +25,7 @@ const PersistLogin = () => {
   //   token,
   //   trueSuccess
   // );
+  console.log("firstMount.current", firstMount.current);
 
   useEffect(() => {
     if (
@@ -49,9 +50,7 @@ const PersistLogin = () => {
     return () => {
       firstMount.current = false;
     };
-  }, [token]);
-
-  // console.log(process.env.API_URL);
+  }, []);
 
   let content = "perstst";
   if (!persist) {
@@ -67,8 +66,13 @@ const PersistLogin = () => {
         </>
       );
     } else if (isSuccess) {
+      //refresh api was run in case refresh page, no token
       content = <Outlet />;
     } else if (token) {
+      content = <Outlet />; // login, because in LoginForm, after setCredential then navigate('/'),
+      // so there are token, no refresh api was run
+    } else if (!token && !firstMount.current && isUninitialized) {
+      // logout situation
       content = <Outlet />;
     }
   }

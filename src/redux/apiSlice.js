@@ -4,6 +4,7 @@ import { BASE_URL } from "../config/api";
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
+  timeout: 3 * 60 * 1000,
   credentials: "include",
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;

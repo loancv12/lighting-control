@@ -78,7 +78,6 @@ const LoginForm = () => {
   return (
     <>
       {isLoading ? <LoadingScreen /> : null}
-      {isError ? <Typography>Something wrong</Typography> : null}
       <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3} width={"100%"}>
           {!!errors.afterSubmit && (
