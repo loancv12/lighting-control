@@ -41,9 +41,9 @@ const Control = () => {
   today.setHours(0, 0, 0, 0);
 
   const ControlLightSchema = Yup.object({
-    startLightingDate: Yup.date()
-      .required("Giá trị cho ngày bắt đầu việc chiếu sáng bổ sung là bắt buộc")
-      .min(today, "Ngày bắt đầu chiếu phải từ ngày hiện tại trở đi"),
+    startLightingDate: Yup.date().required(
+      "Giá trị cho ngày bắt đầu việc chiếu sáng bổ sung là bắt buộc"
+    ),
     endLightingDate: Yup.date()
       .required("Giá trị cho ngày bắt đầu việc chiếu sáng bổ sung là bắt buộc")
       .min(

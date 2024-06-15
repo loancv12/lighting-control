@@ -71,7 +71,12 @@ const PersistLogin = () => {
     } else if (token) {
       content = <Outlet />; // login, because in LoginForm, after setCredential then navigate('/'),
       // so there are token, no refresh api was run
-    } else if (!token && !firstMount.current && isUninitialized) {
+    } else if (
+      !token &&
+      ((!firstMount.current && process.env.NODE_ENV === "development") ||
+        (firstMount.current && process.env.NODE_ENV !== "development")) &&
+      isUninitialized
+    ) {
       // logout situation
       content = <Outlet />;
     }
