@@ -29,23 +29,18 @@ const Statistics = () => {
     pollingInterval: 15 * 60 * 1000, //15m
   });
 
-  console.log("ppfds", ppfds);
-
   const {
     data: dlis,
     isLoading: isLdDli,
     isError: isErrorDli,
     refetch: refetchDli,
   } = useGetDlisQuery(selectDates);
-  console.log("dlis", dlis);
 
   const onSubmitPpfd = (data) => {
-    console.log(data);
     setSelectDate(data.selectDate.toISOString());
   };
 
   const onSubmitDli = (data) => {
-    console.log("onSubmitDli", data);
     setSelectDates({
       startDate: data.startDate.toISOString(),
       endDate: data.endDate.toISOString(),

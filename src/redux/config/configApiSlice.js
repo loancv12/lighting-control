@@ -10,7 +10,6 @@ export const configsApiSlice = apiSlice.injectEndpoints({
         },
       }),
       transformResponse: (responseData) => {
-        console.log("responseData", responseData);
         responseData.data.id = responseData.data._id;
         return responseData.data;
       },

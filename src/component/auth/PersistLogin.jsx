@@ -16,16 +16,6 @@ const PersistLogin = () => {
 
   const [refresh, { isUninitialized, isLoading, isSuccess, isError, error }] =
     useRefreshMutation();
-  // console.log(
-  //   "isUninitialized, isLoading, isSuccess, isError token trueSuccess",
-  //   isUninitialized,
-  //   isLoading,
-  //   isSuccess,
-  //   isError,
-  //   token,
-  //   trueSuccess
-  // );
-  console.log("firstMount.current", firstMount.current);
 
   useEffect(() => {
     if (
@@ -39,7 +29,7 @@ const PersistLogin = () => {
           await refresh();
           console.log("run after refresh");
 
-          // setTrueSuccess(true);
+          setTrueSuccess(true);
         } catch (error) {
           console.log(error);
         }
@@ -57,27 +47,56 @@ const PersistLogin = () => {
     content = <Outlet />;
   } else {
     // persist is true
-    if (isLoading) {
-      content = <LoadingScreen />;
-    } else if (isError) {
-      content = (
-        <>
-          <Navigate to="/login" />
-        </>
-      );
-    } else if (isSuccess) {
-      //refresh api was run in case refresh page, no token
-      content = <Outlet />;
-    } else if (token) {
-      content = <Outlet />; // login, because in LoginForm, after setCredential then navigate('/'),
-      // so there are token, no refresh api was run
-    } else if (
-      !token &&
-      ((!firstMount.current && process.env.NODE_ENV === "development") ||
-        (firstMount.current && process.env.NODE_ENV !== "development")) &&
-      isUninitialized
-    ) {
-      // logout situation
+    // if (isLoading) {
+    //   content = <LoadingScreen />;
+    // } else if (isError) {
+    //   content = (
+    //     <>
+    //       <Navigate to="/login" />
+    //     </>
+    //   );
+    // } else if (isSuccess) {
+    //   //refresh api was run in case refresh page, no token
+    //   content = <Outlet />;
+    // } else if (token) {
+    //   content = <Outlet />; // login, because in LoginForm, after setCredential then navigate('/'),
+    //   // so there are token, no refresh api was run
+    // } else if (
+    //   !token &&
+    //   ((firstMount.current && process.env.NODE_ENV === "development") ||
+    //     (!firstMount.current && process.env.NODE_ENV !== "development")) &&
+    //   isUninitialized
+    // ) {
+    //   // logout situation
+    //   content = <Outlet />;
+    // }
+    // refresh api will run
+    if (!token) {
+      console.log("no token");
+      content = "no token";
+      if (isLoading) {
+        console.log("isLoading");
+        content = <LoadingScreen />;
+      } else if (isError) {
+        console.log("isError");
+        content = <Navigate to={"/login"} />;
+      } else if (isUninitialized) {
+        console.log("isUninitialized", firstMount.current);
+        content = "isUninitialized";
+        if (isUninitialized && firstMount.current === false) {
+          console.log(
+            "isUninitialized",
+            firstMount.current,
+            process.env.NODE_ENV
+          );
+          content = <Outlet />;
+        }
+      } else {
+        console.log("no token no loading, no erroo, no isUninitialized");
+        content = "no token no loading, no erroo, no isUninitialized";
+      }
+    } else {
+      console.log("have token");
       content = <Outlet />;
     }
   }
