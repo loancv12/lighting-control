@@ -83,12 +83,11 @@ const PersistLogin = () => {
       } else if (isUninitialized) {
         console.log("isUninitialized", firstMount.current);
         content = "isUninitialized";
-        if (isUninitialized && firstMount.current === false) {
-          console.log(
-            "isUninitialized",
-            firstMount.current,
-            process.env.NODE_ENV
-          );
+        if (
+          (isUninitialized && firstMount.current === false) ||
+          process.env.NODE_ENV !== "development"
+        ) {
+          console.log("isUninitialized", firstMount.current);
           content = <Outlet />;
         }
       } else {
