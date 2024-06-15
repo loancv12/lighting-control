@@ -11,8 +11,9 @@ const PersistLogin = () => {
   const [persist, setPersist] = usePersist();
   const token = useSelector(selectCurrentToken);
   const firstMount = useRef(true);
-  // state to make sure token is set, mutation flag isSuccess is true before
-  const [trueSuccess, setTrueSuccess] = useState(false);
+  // state to make sure that logout is redirect to Login but refresh page is not
+  // when logout, isRunRefresh is false
+  const [isRunRefresh, setIsRunRefresh] = useState(false);
 
   const [refresh, { isUninitialized, isLoading, isSuccess, isError, error }] =
     useRefreshMutation();
@@ -20,6 +21,7 @@ const PersistLogin = () => {
   useEffect(() => {
     if (
       firstMount.current === false ||
+      process.env.NODE_ENV !== "development" ||
       process.env.NODE_ENV !== "development"
     ) {
       // run once
@@ -29,7 +31,7 @@ const PersistLogin = () => {
           await refresh();
           console.log("run after refresh");
 
-          setTrueSuccess(true);
+          setIsRunRefresh(true);
         } catch (error) {
           console.log(error);
         }
@@ -42,35 +44,12 @@ const PersistLogin = () => {
     };
   }, []);
 
+  useEffect(() => {}, [token]);
+
   let content = "perstst";
   if (!persist) {
     content = <Outlet />;
   } else {
-    // persist is true
-    // if (isLoading) {
-    //   content = <LoadingScreen />;
-    // } else if (isError) {
-    //   content = (
-    //     <>
-    //       <Navigate to="/login" />
-    //     </>
-    //   );
-    // } else if (isSuccess) {
-    //   //refresh api was run in case refresh page, no token
-    //   content = <Outlet />;
-    // } else if (token) {
-    //   content = <Outlet />; // login, because in LoginForm, after setCredential then navigate('/'),
-    //   // so there are token, no refresh api was run
-    // } else if (
-    //   !token &&
-    //   ((firstMount.current && process.env.NODE_ENV === "development") ||
-    //     (!firstMount.current && process.env.NODE_ENV !== "development")) &&
-    //   isUninitialized
-    // ) {
-    //   // logout situation
-    //   content = <Outlet />;
-    // }
-    // refresh api will run
     if (!token) {
       console.log("no token");
       content = "no token";
@@ -81,14 +60,30 @@ const PersistLogin = () => {
         console.log("isError");
         content = <Navigate to={"/login"} />;
       } else if (isUninitialized) {
-        console.log("isUninitialized", firstMount.current);
+        console.log(
+          "isUninitialized",
+          firstMount.current,
+          process.env.NODE_ENV,
+          isRunRefresh,
+          import.meta.env.VITE_NODE_ENV // refresh zo here
+        );
         content = "isUninitialized";
         if (
-          (isUninitialized && firstMount.current === false) ||
+          (isUninitialized &&
+            firstMount.current === false &&
+            process.env.NODE_ENV === "development") ||
           process.env.NODE_ENV !== "development"
         ) {
-          console.log("isUninitialized", firstMount.current);
-          content = <Outlet />;
+          console.log(
+            "isUninitialized firstMount.current false and development or production"
+          );
+          if (isRunRefresh) {
+            console.log(
+              "isUninitialized firstMount.current false and development or production and isRunRefresh",
+              isRunRefresh // logout zo here
+            );
+            content = <Outlet />;
+          }
         }
       } else {
         console.log("no token no loading, no erroo, no isUninitialized");
