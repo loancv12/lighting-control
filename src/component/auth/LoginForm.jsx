@@ -61,7 +61,6 @@ const LoginForm = () => {
     // debugger;
     try {
       // Submit data
-      console.log(data);
       const { accessToken } = await login(data).unwrap();
       dispatch(setCredentials({ accessToken }));
       handleOpenSnackbar({ message: "Login successfully" });

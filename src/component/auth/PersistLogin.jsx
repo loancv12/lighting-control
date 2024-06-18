@@ -13,7 +13,7 @@ const PersistLogin = () => {
   const firstMount = useRef(true);
   // state to make sure that logout is redirect to Login but refresh page is not
   // when logout, isRunRefresh is false
-  const [isRunRefresh, setIsRunRefresh] = useState(false);
+  const usedToHaveToken = useRef(false);
 
   const [refresh, { isUninitialized, isLoading, isSuccess, isError, error }] =
     useRefreshMutation();
@@ -30,8 +30,6 @@ const PersistLogin = () => {
           console.log("run refresh");
           await refresh();
           console.log("run after refresh");
-
-          setIsRunRefresh(true);
         } catch (error) {
           console.log(error);
         }
@@ -44,7 +42,11 @@ const PersistLogin = () => {
     };
   }, []);
 
-  useEffect(() => {}, [token]);
+  useEffect(() => {
+    if (token) {
+      usedToHaveToken.current = true;
+    }
+  }, [token]);
 
   let content = "perstst";
   if (!persist) {
@@ -64,23 +66,23 @@ const PersistLogin = () => {
           "isUninitialized",
           firstMount.current,
           process.env.NODE_ENV,
-          isRunRefresh,
+          usedToHaveToken,
           import.meta.env.VITE_NODE_ENV // refresh zo here
         );
         content = "isUninitialized";
         if (
-          (isUninitialized &&
-            firstMount.current === false &&
-            process.env.NODE_ENV === "development") ||
-          process.env.NODE_ENV !== "development"
+          isUninitialized &&
+          (process.env.NODE_ENV !== "development" ||
+            (firstMount.current === false &&
+              process.env.NODE_ENV === "development"))
         ) {
           console.log(
             "isUninitialized firstMount.current false and development or production"
           );
-          if (isRunRefresh) {
+          if (usedToHaveToken) {
             console.log(
-              "isUninitialized firstMount.current false and development or production and isRunRefresh",
-              isRunRefresh // logout zo here
+              "isUninitialized firstMount.current false and development or production and usedToHaveToken",
+              usedToHaveToken // logout zo here
             );
             content = <Outlet />;
           }

@@ -5,7 +5,6 @@ import Login from "../component/auth/Login";
 import Register from "../component/auth/Register";
 import Control from "../component/control/Control";
 import Statistics from "../component/statistics/Statistics";
-import Users from "../component/user/Users";
 import { ROLES } from "../config/roles";
 import HeaderLayout from "../component/layout/HeaderLayout";
 import CenterLayout from "../component/layout/CenterLayout";
@@ -13,6 +12,8 @@ import Unauthorized from "../component/auth/Unauthorized";
 import NotFound from "../component/NotFound";
 import Prefetch from "../component/auth/Prefetch";
 import PersistLogin from "../component/auth/PersistLogin";
+import Accounts from "../component/accounts/Accounts";
+import CreateAccount from "../component/accounts/CreateAccount";
 
 const Router = () => {
   return (
@@ -52,7 +53,11 @@ const Router = () => {
                   <Route path="/" element={<Statistics />} />
                 </Route>
                 <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
-                  <Route path="/users" element={<Users />} />
+                  <Route path="/accounts" element={<Accounts />} />
+                  <Route
+                    path="/accounts/create-account"
+                    element={<CreateAccount />}
+                  />
                 </Route>
               </Route>
             </Route>

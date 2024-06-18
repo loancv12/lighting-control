@@ -5,12 +5,16 @@ import {
   ArrowCircleRight,
   ArrowCircleUp,
   ArrowClockwise,
+  DownloadSimple,
 } from "phosphor-react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Charts from "./Charts";
 import { defaultNumOfPoint } from "../../config/app";
+import { exportExcel } from "../../utils/exportExcel";
+import { SnackbarContext } from "../../context/SnackbarProvider";
 
 const ControlChart = ({
+  type,
   page,
   setPage,
   period,
@@ -20,6 +24,7 @@ const ControlChart = ({
   naturals,
   afterSLs,
   refetch,
+  exportDataToExcel,
 }) => {
   const canNextPeriod = period < numberOfData;
   const canPrevPeriod = period > 1;
@@ -45,6 +50,10 @@ const ControlChart = ({
 
   const handlePrevPeriod = () => {
     setPeriod((prevPeriod) => prevPeriod - 1);
+  };
+
+  const handleDownload = () => {
+    exportDataToExcel();
   };
 
   useEffect(() => {
@@ -83,10 +92,13 @@ const ControlChart = ({
             </IconButton>
           </span>
         </Tooltip>
+        <IconButton onClick={handleDownload}>
+          <DownloadSimple size={32} />
+        </IconButton>
       </Stack>
       <Box sx={{ height: "300px", width: "100%" }}>
         <Charts
-          type={"PPFD"}
+          type={type}
           labels={labels}
           naturals={naturals}
           afterSLs={afterSLs}

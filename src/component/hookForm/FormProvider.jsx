@@ -8,7 +8,7 @@ const FormProvider = ({ children, onSubmit, methods }) => {
       <Paper
         sx={{
           marginTop: 3,
-          padding: 3,
+          padding: { xs: 2, md: 3 },
         }}
         component={"form"}
         onSubmit={onSubmit}

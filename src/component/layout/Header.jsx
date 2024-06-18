@@ -27,10 +27,6 @@ const menu = [
     path: "/control",
     title: "Điều khiển",
   },
-  {
-    path: "/users",
-    title: "Nhân viên",
-  },
 ];
 
 const Header = () => {

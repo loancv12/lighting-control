@@ -1,20 +1,15 @@
-import { Box, IconButton, Stack, Tooltip } from "@mui/material";
-import {
-  ArrowCircleDown,
-  ArrowCircleLeft,
-  ArrowCircleRight,
-  ArrowCircleUp,
-  ArrowClockwise,
-} from "phosphor-react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Charts from "./Charts";
-import { onlyTime } from "../../utils/formatDate";
+import { onlyDate, onlyTime } from "../../utils/formatDate";
 import { memo } from "react";
 import ControlChart from "./ControlChart";
 import { defaultNumOfPoint } from "../../config/app";
+import { exportExcel } from "../../utils/exportExcel";
+import { SnackbarContext } from "../../context/SnackbarProvider";
 
 const DLIChart = memo(({ dlis, refetch }) => {
   const numberOfData = dlis?.ids?.length;
+  const { handleOpenSnackbar } = useContext(SnackbarContext);
 
   const [page, setPage] = useState(0);
   const [period, setPeriod] = useState(defaultNumOfPoint);
@@ -24,7 +19,7 @@ const DLIChart = memo(({ dlis, refetch }) => {
 
   const labels = chunk?.map((id) => {
     const record = dlis?.entities[id];
-    return onlyTime(record.createdAt);
+    return onlyDate(record.createdAt);
   });
 
   const naturals = chunk?.map((id) => {
@@ -37,8 +32,30 @@ const DLIChart = memo(({ dlis, refetch }) => {
     return record.newDli;
   });
 
+  const exportDataToExcel = () => {
+    if (labels.length === 0) {
+      handleOpenSnackbar({
+        message: "Không có dữ liệu trong thời gian được chọn",
+      });
+    } else {
+      const transformData = dlis.ids.map((id) => {
+        const { oldDli, newDli, createdAt } = dlis.entities[id];
+        return {
+          "Thời gian": createdAt,
+          "DLI tự nhiên": oldDli,
+          "DLI sau khi bổ sung": newDli,
+        };
+      });
+      exportExcel(
+        `DLI-${labels[0]}-${labels[labels.length - 1]}`,
+        transformData
+      );
+    }
+  };
+
   return (
     <ControlChart
+      type="DLI"
       numberOfData={numberOfData}
       page={page}
       setPage={setPage}
@@ -48,6 +65,7 @@ const DLIChart = memo(({ dlis, refetch }) => {
       naturals={naturals}
       afterSLs={afterSLs}
       refetch={refetch}
+      exportDataToExcel={exportDataToExcel}
     />
   );
 });

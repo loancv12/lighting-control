@@ -23,7 +23,6 @@ export default function RHFSelect({
   helperText,
   ...other
 }) {
-  console.log(label);
   const { control } = useFormContext();
   return (
     <Controller
