@@ -71,35 +71,28 @@ const CreateAccount = () => {
     ],
   };
 
-  Yup.setLocale({
-    mixed: {
-      notType: "${path} là bắt buộc",
-      required: "${path} is bắt buộc",
-      oneOf: "${path} phải là một trong những giá trị sau: ${values}",
-    },
-    string: {
-      min: "${path} phải có ít nhất ${min} kí tự",
-      max: "${path} phải có nhiều nhất ${max} kí tự",
-    },
-    array: {
-      min: "${path} phải có ít nhất ${min} giá trị",
-      max: "${path} phải có nhiều nhất ${max} giá trị",
-    },
-  });
-
   const areaSchema = Yup.object({
-    name: Yup.string().min(4).max(14).required(),
+    name: Yup.string()
+      .min(4, "Tên khu vực phải có 4-14 kí tự")
+      .max(14, "Tên khu vực phải có 4-14 kí tự")
+      .required("Tên khu vực là trường bắt buộc"),
     sensors: Yup.array()
       .of(Yup.string().oneOf(Object.values(SENSORS)))
-      .min(1),
+      .min(1, "Ban phải chọn ít nhất một loại sensor cho khu vực"),
   });
   const accountSchema = Yup.object({
-    username: Yup.string().min(4).max(14).required(),
-    password: Yup.string().min(4).max(14).required(),
+    username: Yup.string()
+      .min(4, "Tên đăng nhập phải có 4-14 kí tự")
+      .max(14, "Tên đăng nhập phải có 4-14 kí tự")
+      .required("Tên đăng nhập là trường bắt buộc"),
+    password: Yup.string()
+      .min(4, "Mật khẩu phải có 4-14 kí tự")
+      .max(14, "Mật khẩu phải có 4-14 kí tự")
+      .required("Mật khẩu là trường bắt buộc"),
     roles: Yup.array()
       .of(Yup.string().oneOf(Object.values(ROLES)))
-      .min(1)
-      .required(),
+      .min(1, "Bạn phải chọn ít nhất một vai trò")
+      .required("Bạn phải chọn ít nhất một vai trò"),
     areas: Yup.array()
       .ensure()
       .of(areaSchema)
@@ -112,7 +105,7 @@ const CreateAccount = () => {
           if (duplicateIndex !== -1)
             return context.createError({
               path: `areas.[${duplicateIndex}].name`,
-              message: "Duplicate value",
+              message: "Tên khu vực không được trùng",
             });
           return true;
         },
