@@ -13,12 +13,13 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-RHFSelect.prototype = {
+import { useState } from "react";
+RHFMultiSelect.prototype = {
   name: PropTypes.string,
   helperText: PropTypes.node,
 };
 
-export default function RHFSelect({
+export default function RHFMultiSelect({
   name,
   label,
   options,
@@ -26,17 +27,31 @@ export default function RHFSelect({
   ...other
 }) {
   const { control } = useFormContext();
+  const [values, setValues] = useState([]);
+
+  const handleChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setValues(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
   return (
     <Controller
       render={({ field, fieldState: { error } }) => {
         return (
-          <FormControl sx={{ width: "100%", m: 1 }}>
+          <FormControl sx={{ maxWidth: "100%", m: 1 }} error={!!error}>
             <InputLabel id={`label-${label}`}>{label}</InputLabel>
             <Select
               id={`select-${label}`}
               fullWidth
+              multiple
               labelId={`label-${label}`}
               input={<OutlinedInput label={label} />}
+              value={values}
+              onChange={handleChange}
               {...field}
             >
               {options.map((option) => (
@@ -45,7 +60,9 @@ export default function RHFSelect({
                 </MenuItem>
               ))}
             </Select>
-            <FormHelperText>{error}</FormHelperText>
+            <FormHelperText>
+              {error ? error.message : helperText}
+            </FormHelperText>
           </FormControl>
         );
       }}

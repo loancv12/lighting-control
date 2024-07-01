@@ -66,37 +66,7 @@ const ControlChart = ({
 
   return (
     <Stack direction="row">
-      <Stack justifyContent={"center"}>
-        <IconButton onClick={handleRefetch}>
-          <ArrowClockwise size={32} />
-        </IconButton>
-
-        <IconButton onClick={handlePrevPage} disabled={!canPrevPage}>
-          <ArrowCircleLeft size={32} />
-        </IconButton>
-        <IconButton onClick={handleNextPage} disabled={!canNextPage}>
-          <ArrowCircleRight size={32} />
-        </IconButton>
-
-        <Tooltip title="Tăng độ rộng thời gian" placement="left">
-          <span>
-            <IconButton onClick={handleNextPeriod} disabled={!canNextPeriod}>
-              <ArrowCircleUp size={32} />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <Tooltip title="Giảm độ rộng thời gian" placement="left">
-          <span>
-            <IconButton onClick={handlePrevPeriod} disabled={!canPrevPeriod}>
-              <ArrowCircleDown size={32} />
-            </IconButton>
-          </span>
-        </Tooltip>
-        <IconButton onClick={handleDownload}>
-          <DownloadSimple size={32} />
-        </IconButton>
-      </Stack>
-      <Box sx={{ height: "300px", width: "100%" }}>
+      <Box sx={{ height: "300px", width: "calc(100% - 48px)" }}>
         <Charts
           type={type}
           labels={labels}
@@ -104,6 +74,36 @@ const ControlChart = ({
           afterSLs={afterSLs}
         />
       </Box>
+      <Stack justifyContent={"flex-end"}>
+        <IconButton onClick={handleRefetch}>
+          <ArrowClockwise size={20} />
+        </IconButton>
+
+        <IconButton onClick={handlePrevPage} disabled={!canPrevPage}>
+          <ArrowCircleLeft size={20} />
+        </IconButton>
+        <IconButton onClick={handleNextPage} disabled={!canNextPage}>
+          <ArrowCircleRight size={20} />
+        </IconButton>
+
+        <Tooltip title="Tăng độ rộng thời gian" placement="left">
+          <span>
+            <IconButton onClick={handleNextPeriod} disabled={!canNextPeriod}>
+              <ArrowCircleUp size={20} />
+            </IconButton>
+          </span>
+        </Tooltip>
+        <Tooltip title="Giảm độ rộng thời gian" placement="left">
+          <span>
+            <IconButton onClick={handlePrevPeriod} disabled={!canPrevPeriod}>
+              <ArrowCircleDown size={20} />
+            </IconButton>
+          </span>
+        </Tooltip>
+        <IconButton onClick={handleDownload}>
+          <DownloadSimple size={20} />
+        </IconButton>
+      </Stack>
     </Stack>
   );
 };

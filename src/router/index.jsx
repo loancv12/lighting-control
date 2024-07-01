@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RequiredAuth from "../component/auth/RequiredAuth";
 import SocketProvider from "../context/SocketProvider";
 import Login from "../component/auth/Login";
-import Register from "../component/auth/Register";
 import Control from "../component/control/Control";
 import Statistics from "../component/statistics/Statistics";
 import { ROLES } from "../config/roles";
@@ -10,10 +9,10 @@ import HeaderLayout from "../component/layout/HeaderLayout";
 import CenterLayout from "../component/layout/CenterLayout";
 import Unauthorized from "../component/auth/Unauthorized";
 import NotFound from "../component/NotFound";
-import Prefetch from "../component/auth/Prefetch";
 import PersistLogin from "../component/auth/PersistLogin";
 import Accounts from "../component/accounts/Accounts";
 import CreateAccount from "../component/accounts/CreateAccount";
+import SidebarLayout from "../component/layout/SidebarLayout";
 
 const Router = () => {
   return (
@@ -21,7 +20,6 @@ const Router = () => {
       <Routes>
         <Route element={<CenterLayout />}>
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
         </Route>
         <Route element={<HeaderLayout />}>
           <Route element={<PersistLogin />}>
@@ -30,7 +28,7 @@ const Router = () => {
                 <RequiredAuth allowedRoles={[...Object.values(ROLES)]} />
               }
             >
-              <Route element={<Prefetch />}>
+              <Route element={<SidebarLayout />}>
                 <Route
                   element={
                     <RequiredAuth allowedRoles={[ROLES.Admin, ROLES.User]} />
@@ -52,12 +50,11 @@ const Router = () => {
                 >
                   <Route path="/" element={<Statistics />} />
                 </Route>
-                <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
-                  <Route path="/accounts" element={<Accounts />} />
-                  <Route
-                    path="/accounts/create-account"
-                    element={<CreateAccount />}
-                  />
+              </Route>
+              <Route element={<RequiredAuth allowedRoles={[ROLES.Admin]} />}>
+                <Route path="/accounts">
+                  <Route index element={<Accounts />} />
+                  <Route path="create-account" element={<CreateAccount />} />
                 </Route>
               </Route>
             </Route>

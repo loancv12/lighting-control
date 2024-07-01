@@ -1,4 +1,5 @@
 import { apiSlice } from "../apiSlice";
+import { setSelectedAreaId } from "../area/areaSlice";
 import { logOut, setCredentials } from "./authSlice";
 
 export const authApiSlice = apiSlice.injectEndpoints({
@@ -18,8 +19,9 @@ export const authApiSlice = apiSlice.injectEndpoints({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           const { data } = await queryFulfilled;
-          console.log("when queryFulfilled", data);
+          // console.log("when queryFulfilled", data);
           dispatch(logOut());
+          dispatch(setSelectedAreaId({ areaId: null }));
           dispatch(apiSlice.util.resetApiState());
         } catch (err) {
           console.log(err);

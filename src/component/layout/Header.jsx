@@ -29,16 +29,16 @@ const menu = [
   },
 ];
 
+const authMenu = [
+  {
+    path: "/accounts",
+    title: "Người dùng",
+  },
+];
+
 const Header = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const { isAdmin } = useAuth();
 
   const [sendLogout, { isError, error }] = useSendLogoutMutation();
 
@@ -72,6 +72,17 @@ const Header = () => {
               )}
             </NavLink>
           ))}
+          {isAdmin
+            ? authMenu.map((el, i) => (
+                <NavLink key={i} to={el.path}>
+                  {({ isActive, isPending, isTransitioning }) => (
+                    <Button variant={isActive ? "contained" : "text"}>
+                      {el.title}
+                    </Button>
+                  )}
+                </NavLink>
+              ))
+            : null}
           <Button variant={"text"} onClick={handleLogout}>
             Thoát
           </Button>

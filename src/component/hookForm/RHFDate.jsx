@@ -28,9 +28,10 @@ export default function RHFDate({ name, label, helperText, ...other }) {
             sx={{
               // zIndex: 2,
               "& .react-datepicker__input-container input": {
-                padding: "16.5px 14px",
+                padding: { xs: "13.5px 8px", md: "16.5px 14px" },
                 fontSize: "1rem",
                 outline: "transparent",
+                width: { xs: "150px", md: "auto" },
               },
 
               "& .react-datepicker-popper": {

@@ -5,36 +5,54 @@ import {
   CircularProgress,
   IconButton,
   Stack,
+  Divider,
   Typography,
 } from "@mui/material";
-import { useGetPpfdsQuery } from "../../redux/ppfd/ppfdApiSlice";
 import LoadingScreen from "../LoadingScreen";
-import PPFDChart from "./PPFDChart";
 import SelectDate from "./SelectDate";
 import SelectDates from "./SelectDates";
-import { useGetDlisQuery } from "../../redux/dli/dliApiSlice";
-import DLIChart from "./DLIChart";
 import { getDateNow, getDateNowAnd15Ago } from "../../utils/formatDate";
+import RecordProcessChart from "./RecordProcessChart";
+import { selectAreaId } from "../../redux/area/areaSlice";
+import { useSelector } from "react-redux";
+import {
+  useGetRecordsInDayQuery,
+  useGetRecordsInPeriodQuery,
+} from "../../redux/sensorRecord/sensorRecSliceApi";
 
 const Statistics = () => {
+  const selectedAreaId = useSelector(selectAreaId);
+
   const [selectDates, setSelectDates] = useState(getDateNowAnd15Ago);
   const [selectDate, setSelectDate] = useState(getDateNow);
 
+  const paramPpfds = {
+    areaId: selectedAreaId,
+    typeOfParameter: "ppfd",
+    selectDate,
+  };
   const {
     data: ppfds,
     isLoading: isLdPpfd,
     isError: isErrorPpfd,
     refetch: refetchPpfd,
-  } = useGetPpfdsQuery(selectDate, {
+  } = useGetRecordsInDayQuery(paramPpfds, {
     pollingInterval: 15 * 60 * 1000, //15m
+
+    // skip: true,
   });
 
+  const paramDlis = {
+    areaId: selectedAreaId,
+    typeOfParameter: "dli",
+    ...selectDates,
+  };
   const {
     data: dlis,
     isLoading: isLdDli,
     isError: isErrorDli,
     refetch: refetchDli,
-  } = useGetDlisQuery(selectDates);
+  } = useGetRecordsInPeriodQuery(paramDlis);
 
   const onSubmitPpfd = (data) => {
     setSelectDate(data.selectDate.toISOString());
@@ -56,17 +74,19 @@ const Statistics = () => {
     content = (
       <>
         <Stack spacing={1}>
-          <Stack
-            direction={{ xs: "column", md: "row" }}
-            spacing={2}
-            alignItems={"center"}
-            justifyContent={"space-between"}
-          >
-            <SelectDate onSubmit={onSubmitPpfd} />
-            <SelectDates onSubmit={onSubmitDli} />
-          </Stack>
-          <PPFDChart ppfds={ppfds} refetch={refetchPpfd} />
-          <DLIChart dlis={dlis} refetch={refetchDli} />
+          <SelectDate onSubmit={onSubmitPpfd} />
+          <RecordProcessChart
+            type={"PPFD"}
+            records={ppfds}
+            refetch={refetchPpfd}
+          />
+          <Divider sx={{ borderColor: "red" }} />
+          <SelectDates onSubmit={onSubmitDli} />
+          <RecordProcessChart
+            type={"DLI"}
+            records={dlis}
+            refetch={refetchDli}
+          />
         </Stack>
       </>
     );

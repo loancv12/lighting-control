@@ -123,15 +123,6 @@ const LoginForm = () => {
             />
             Ghi nhớ
           </label>
-          <Link
-            variant="body2"
-            to="/auth/reset-password"
-            component={RouterLink}
-            color="inherit"
-            underline="always"
-          >
-            Quên mật khẩu
-          </Link>
         </Stack>
         <Button
           fullWidth

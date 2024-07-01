@@ -6,7 +6,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import RHFTextField from "../hookForm/RHFTextField";
 import RHFSelect from "../hookForm/RHFSelect";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -17,28 +17,23 @@ import FormProvider from "../hookForm/FormProvider";
 import { SocketContext } from "../../context/SocketProvider";
 import { useGetConfigQuery } from "../../redux/config/configApiSlice";
 import LoadingScreen from "../LoadingScreen";
+import { selectAreaId } from "../../redux/area/areaSlice";
+import { useSelector } from "react-redux";
 
 const Control = () => {
+  const selectedAreaId = useSelector(selectAreaId);
+
+  const socket = useContext(SocketContext);
+
   const now = new Date();
-  const defaultConfig = {
-    startLightingDate: now,
-    endLightingDate: now,
-    mode: "early-morning",
-    dliTarget: 22,
-    ppfdLamp: 300,
-    saturatedPpfd: 500,
-  };
   const {
-    data: config = defaultConfig,
+    data: defaultConfig,
     isLoading,
     isError,
     error,
     refetch,
-  } = useGetConfigQuery();
-  console.log("error", error);
-  const socket = useContext(SocketContext);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  } = useGetConfigQuery({ areaId: selectedAreaId });
+  console.log(defaultConfig);
 
   const ControlLightSchema = Yup.object({
     startLightingDate: Yup.date().required(
@@ -73,21 +68,13 @@ const Control = () => {
       ),
   });
 
-  const {
-    startLightingDate,
-    endLightingDate,
-    mode,
-    dliTarget,
-    ppfdLamp,
-    saturatedPpfd,
-  } = config;
   const defaultValues = {
-    startLightingDate,
-    endLightingDate,
-    mode,
-    dliTarget,
-    ppfdLamp,
-    saturatedPpfd,
+    startLightingDate: now,
+    endLightingDate: now,
+    mode: "early-morning",
+    dliTarget: 22,
+    ppfdLamp: 300,
+    saturatedPpfd: 500,
   };
 
   const modeOptions = [
@@ -113,13 +100,15 @@ const Control = () => {
     formState: { errors, isSubmitting, isSubmitSuccessful },
   } = methods;
 
-  console.log(errors);
   const onSubmit = (data) => {
-    console.log("submit", data);
-    socket.emit("change-config", data, () => {
+    socket.emit("change-config", { areaId: selectedAreaId, ...data }, () => {
       refetch();
     });
   };
+
+  useEffect(() => {
+    reset(defaultConfig);
+  }, [defaultConfig, reset]);
 
   let content;
   if (isLoading) {
