@@ -31,14 +31,17 @@ export const areasApiSlice = apiSlice.injectEndpoints({
       },
     }),
     addNewArea: builder.mutation({
-      query: (initialAreaData) => ({
+      query: (body) => ({
         url: "/areas",
         method: "POST",
         body: {
-          ...initialAreaData,
+          ...body,
         },
       }),
-      invalidatesTags: [{ type: "Area", id: "LIST" }],
+      invalidatesTags: (result, error, body) => [
+        { type: "Area", id: "LIST" },
+        { type: "Account", id: body.userId },
+      ],
     }),
   }),
 });

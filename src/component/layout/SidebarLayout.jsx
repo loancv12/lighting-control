@@ -13,13 +13,7 @@ const SidebarLayout = () => {
         <Box width={"100%"}>
           <Sidebar />
         </Box>
-        <Box width={"100%"}>
-          {selectedAreaId ? (
-            <Outlet />
-          ) : (
-            <Typography>Đầu tiên, bạn phải chọn khu vực đã</Typography>
-          )}
-        </Box>
+        <Box width={"100%"}>{selectedAreaId ? <Outlet /> : null}</Box>
       </Stack>
     </Container>
   );

@@ -23,33 +23,38 @@ const Sidebar = () => {
   } else {
     if (areas.ids.length) {
       content = (
-        <Stack direction={"row"} alignItems={"center"} spacing={2}>
-          <Typography variant="h2" sx={{ fontSize: "1rem" }}>
-            Khu vực:
-          </Typography>
+        <>
+          {!selectedAreaId ? (
+            <Typography variant="h2" sx={{ fontSize: "1rem", mb: "8px" }}>
+              Đầu tiên, bạn phải chọn khu vực:
+            </Typography>
+          ) : null}
+          <Stack direction={"row"} alignItems={"center"} spacing={2}>
+            <Typography variant="h2" sx={{ fontSize: "1rem" }}>
+              Khu vực:
+            </Typography>
 
-          <ButtonGroup variant="contained" aria-label="Area list">
-            {areas.ids.map((id, i) => (
-              <Button
-                key={i}
-                sx={{
-                  backgroundColor: (theme) =>
-                    selectedAreaId === areas.entities[id].id
-                      ? theme.palette.info.light
-                      : theme.palette.info.main,
-                }}
-                onClick={() => handleSelectArea(areas.entities[id].id)}
-              >
-                {areas.entities[id].name}
-              </Button>
-            ))}
-          </ButtonGroup>
-        </Stack>
+            <ButtonGroup variant="contained" aria-label="Area list">
+              {areas.ids.map((id, i) => (
+                <Button
+                  key={i}
+                  sx={{
+                    backgroundColor: (theme) =>
+                      selectedAreaId === areas.entities[id].id
+                        ? theme.palette.info.light
+                        : theme.palette.info.main,
+                  }}
+                  onClick={() => handleSelectArea(areas.entities[id].id)}
+                >
+                  {areas.entities[id].name}
+                </Button>
+              ))}
+            </ButtonGroup>
+          </Stack>
+        </>
       );
     } else {
-      content = (
-        <Typography>Người dùng này không sở hữu khu vực nào</Typography>
-      );
+      content = <Typography>Bạn không sở hữu khu vực nào</Typography>;
     }
   }
   return content;

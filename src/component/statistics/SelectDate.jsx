@@ -4,7 +4,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import FormProvider from "../hookForm/FormProvider";
 import { useForm } from "react-hook-form";
-import { IconButton, Stack } from "@mui/material";
+import { IconButton, Stack, Typography } from "@mui/material";
 import { PaperPlane, PaperPlaneRight } from "phosphor-react";
 
 const SelectDate = ({ onSubmit }) => {
@@ -41,7 +41,10 @@ const SelectDate = ({ onSubmit }) => {
         alignItems={"center"}
         justifyContent={"flex-start"}
       >
-        <RHFDate name="selectDate" label={"PPFD"} />
+        <Typography variant="body2">PPFD</Typography>
+        <Stack>
+          <RHFDate name="selectDate" />
+        </Stack>
         <IconButton type="submit">
           <PaperPlaneRight size={24} />
         </IconButton>

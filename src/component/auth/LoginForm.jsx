@@ -69,7 +69,7 @@ const LoginForm = () => {
       console.log(error);
       reset();
       setError("afterSubmit", {
-        message: error.data.message ?? "Something wrong",
+        message: error?.data?.message ?? "Something wrong",
       });
     }
   };

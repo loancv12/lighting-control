@@ -17,11 +17,14 @@ import {
   Info,
   PlusCircle,
 } from "phosphor-react";
-import { Icon, styled } from "@mui/material";
+import { Icon, Popover, Tooltip, styled } from "@mui/material";
 import { useGetAccountsQuery } from "../../redux/acount/acountApiSlice";
 import LoadingScreen from "../LoadingScreen";
-import { Fragment, useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ViRoles } from "../../config/roles";
+import { ViSensors } from "../../config/sensors";
+import AddAreaForm from "./AddAreaForm";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&": {
@@ -42,6 +45,8 @@ const StyledTableRowGray = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+
+const capitalize = (s) => (s && s[0].toUpperCase() + s.slice(1)) || "";
 
 function SmallTableInside({ row }) {
   const [open, setOpen] = useState(false);
@@ -81,7 +86,7 @@ function SmallTableInside({ row }) {
                 sx={{ position: "relative" }}
               >
                 {sensor._id}
-                <IconButton onClick={() => copyToClipboard(sensor.id)}>
+                <IconButton onClick={() => copyToClipboard(sensor._id)}>
                   <Clipboard />
                   {copySuccess ? (
                     <span
@@ -102,7 +107,7 @@ function SmallTableInside({ row }) {
                   ) : null}
                 </IconButton>
               </TableCell>
-              <TableCell>{sensor.name.toUpperCase()}</TableCell>
+              <TableCell>{ViSensors[capitalize(sensor.name)]}</TableCell>
             </TableRow>
           </Fragment>
         ))}
@@ -177,21 +182,63 @@ function RowOfTableInside({ area }) {
 }
 
 function TableInside({ row }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
+  const handleAddArea = (e) => {
+    handleClick(e);
+    console.log(row);
+  };
   return (
-    <Table size="small" aria-label="area">
-      <TableHead>
-        <TableRow>
-          <TableCell />
-          <TableCell>Id</TableCell>
-          <TableCell>Tên khu vực</TableCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {row?.areas?.map((area, i) => (
-          <RowOfTableInside key={i} area={area} />
-        ))}
-      </TableBody>
-    </Table>
+    <>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        sx={{
+          "& .MuiPaper-root": {
+            width: "600px",
+          },
+        }}
+      >
+        <AddAreaForm user={row} onClose={handleClose} />
+      </Popover>
+      <Table size="small" aria-label="area">
+        <TableHead>
+          <TableRow>
+            <TableCell>
+              <Tooltip title="Thêm khu vực">
+                <IconButton aria-describedby={id} onClick={handleAddArea}>
+                  <PlusCircle size={20} />
+                </IconButton>
+              </Tooltip>
+            </TableCell>
+            <TableCell>Id</TableCell>
+            <TableCell>Tên khu vực</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {row?.areas?.map((area, i) => (
+            <RowOfTableInside key={i} area={area} />
+          ))}
+        </TableBody>
+      </Table>
+    </>
   );
 }
 
@@ -199,15 +246,6 @@ function Row(props) {
   const { row } = props;
   const [open, setOpen] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
-  const copyToClipboard = async (text) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopySuccess(true);
-      setTimeout(function () {
-        setCopySuccess(false);
-      }, 4000);
-    } catch (error) {}
-  };
 
   return (
     <Fragment>
@@ -244,7 +282,9 @@ function Row(props) {
             ) : null}
           </IconButton>
         </TableCell>
-        <TableCell>{row.roles.join()}</TableCell>
+        <TableCell>
+          {row.roles.map((role) => ViRoles[capitalize(role)]).join()}
+        </TableCell>
         <TableCell>{row.username}</TableCell>
       </StyledTableRow>
       <TableRow>
@@ -288,9 +328,11 @@ export default function Accounts() {
           >
             <TableRow>
               <TableCell>
-                <IconButton onClick={handleAddUser}>
-                  <PlusCircle size={32} color="white" />
-                </IconButton>
+                <Tooltip title="Thêm người dùng">
+                  <IconButton onClick={handleAddUser}>
+                    <PlusCircle size={32} color="white" />
+                  </IconButton>
+                </Tooltip>
               </TableCell>
               <TableCell>Id</TableCell>
               <TableCell>Vai trò</TableCell>

@@ -3,12 +3,12 @@ import React from "react";
 import RHFTextField from "../hookForm/RHFTextField";
 import { Gear, MinusCircle } from "phosphor-react";
 import RHFMultiSelect from "../hookForm/RHFMultiSelect";
-import { SENSORS } from "../../config/sensors";
+import { SENSORS, ViSensors } from "../../config/sensors";
 
 export default function AreaItem({ field, index, name, control, remove }) {
   const sensorOptions = Object.keys(SENSORS).map((key) => {
     return {
-      title: key,
+      title: ViSensors[key],
       value: SENSORS[key],
     };
   });

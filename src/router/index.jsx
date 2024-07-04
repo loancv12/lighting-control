@@ -1,6 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RequiredAuth from "../component/auth/RequiredAuth";
-import SocketProvider from "../context/SocketProvider";
 import Login from "../component/auth/Login";
 import Control from "../component/control/Control";
 import Statistics from "../component/statistics/Statistics";
@@ -34,14 +33,7 @@ const Router = () => {
                     <RequiredAuth allowedRoles={[ROLES.Admin, ROLES.User]} />
                   }
                 >
-                  <Route
-                    path="/control"
-                    element={
-                      <SocketProvider>
-                        <Control />
-                      </SocketProvider>
-                    }
-                  />
+                  <Route path="/control" element={<Control />} />
                 </Route>
                 <Route
                   element={

@@ -31,7 +31,13 @@ const Charts = ({ labels, naturals, afterSLs, type }) => {
       },
       title: {
         display: true,
-        text: `Biểu đồ ${type}`,
+        text: `Biểu đồ ${
+          type === "PPFD"
+            ? "cường độ ánh sáng (µmol/m²/s)"
+            : type === "DLI"
+            ? "tổng lượng ánh sáng trong ngày (mol/d)"
+            : ""
+        }`,
       },
     },
   };
@@ -40,13 +46,13 @@ const Charts = ({ labels, naturals, afterSLs, type }) => {
     labels,
     datasets: [
       {
-        label: `${type} tự nhiên`,
+        label: `Tự nhiên`,
         data: naturals,
         borderColor: "rgb(53, 162, 235)",
         backgroundColor: "rgba(53, 162, 235, 0.5)",
       },
       {
-        label: `${type} sau khi bổ sung`,
+        label: `Sau khi chiếu sáng bổ sung`,
         data: afterSLs,
         borderColor: "rgb(53, 162, 5)",
         backgroundColor: "rgba(53, 162, 5, 0.5)",

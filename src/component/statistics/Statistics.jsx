@@ -73,14 +73,14 @@ const Statistics = () => {
   } else {
     content = (
       <>
-        <Stack spacing={1}>
+        <Stack spacing={2}>
           <SelectDate onSubmit={onSubmitPpfd} />
           <RecordProcessChart
             type={"PPFD"}
             records={ppfds}
             refetch={refetchPpfd}
           />
-          <Divider sx={{ borderColor: "red" }} />
+          <Divider sx={{ borderColor: "red", mb: "16px" }} />
           <SelectDates onSubmit={onSubmitDli} />
           <RecordProcessChart
             type={"DLI"}

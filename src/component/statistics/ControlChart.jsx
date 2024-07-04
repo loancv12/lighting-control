@@ -74,7 +74,7 @@ const ControlChart = ({
           afterSLs={afterSLs}
         />
       </Box>
-      <Stack justifyContent={"flex-end"}>
+      <Stack justifyContent={"center"}>
         <IconButton onClick={handleRefetch}>
           <ArrowClockwise size={20} />
         </IconButton>
@@ -86,7 +86,7 @@ const ControlChart = ({
           <ArrowCircleRight size={20} />
         </IconButton>
 
-        <Tooltip title="Tăng độ rộng thời gian" placement="left">
+        {/* <Tooltip title="Tăng độ rộng thời gian" placement="left">
           <span>
             <IconButton onClick={handleNextPeriod} disabled={!canNextPeriod}>
               <ArrowCircleUp size={20} />
@@ -99,7 +99,7 @@ const ControlChart = ({
               <ArrowCircleDown size={20} />
             </IconButton>
           </span>
-        </Tooltip>
+        </Tooltip> */}
         <IconButton onClick={handleDownload}>
           <DownloadSimple size={20} />
         </IconButton>

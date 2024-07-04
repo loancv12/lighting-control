@@ -12,7 +12,7 @@ const PersistLogin = () => {
   const token = useSelector(selectCurrentToken);
   const firstMount = useRef(true);
   // state to make sure that logout is redirect to Login but refresh page is not
-  // when logout, isRunRefresh is false
+  // when logout, usedToHaveToken is true, but when refresh, it false
   const usedToHaveToken = useRef(false);
 
   const [refresh, { isUninitialized, isLoading, isSuccess, isError, error }] =
@@ -79,7 +79,7 @@ const PersistLogin = () => {
           console.log(
             "isUninitialized firstMount.current false and development or production"
           );
-          if (usedToHaveToken) {
+          if (usedToHaveToken.current) {
             console.log(
               "isUninitialized firstMount.current false and development or production and usedToHaveToken",
               usedToHaveToken // logout zo here

@@ -14,7 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import RHFTextField from "../hookForm/RHFTextField";
-import { ROLES } from "../../config/roles";
+import { ROLES, ViRoles } from "../../config/roles";
 import RHFMultiSelect from "../hookForm/RHFMultiSelect";
 import {
   ArrowArcLeft,
@@ -29,26 +29,7 @@ import { useAddNewAccountMutation } from "../../redux/acount/acountApiSlice";
 import LoadingScreen from "../LoadingScreen";
 import { SnackbarContext } from "../../context/SnackbarProvider";
 import { useNavigate } from "react-router-dom";
-
-function findSecondDuplicateIndex(arr) {
-  const seen = new Map();
-
-  for (let i = 0; i < arr.length; i++) {
-    const item = arr[i];
-    if (seen.has(item)) {
-      seen.set(item, seen.get(item) + 1);
-      // If an item is seen more than once, return its index as the second duplicate
-      if (seen.get(item) === 2) {
-        return i;
-      }
-    } else {
-      seen.set(item, 1);
-    }
-  }
-
-  // If no second duplicate is found, return -1 to indicate not found
-  return -1;
-}
+import { findSecondDuplicateIndex } from "../../utils/findSecondDup";
 
 const CreateAccount = () => {
   const { handleOpenSnackbar } = useContext(SnackbarContext);
@@ -130,9 +111,7 @@ const CreateAccount = () => {
     name: "areas", // unique name for your Field Array
   });
 
-  console.log("errors", errors, isError);
   const onSubmit = async (data) => {
-    console.log("submit", data);
     try {
       await addNewAccount(data).unwrap();
       handleOpenSnackbar({ message: "Create account successfully" });
@@ -147,7 +126,7 @@ const CreateAccount = () => {
 
   const roleOptions = Object.keys(ROLES).map((key) => {
     return {
-      title: key,
+      title: ViRoles[key],
       value: ROLES[key],
     };
   });
@@ -164,37 +143,49 @@ const CreateAccount = () => {
         component={"form"}
         onSubmit={handleSubmit(onSubmit)}
       >
-        {!!errors.afterSubmit && (
-          <Alert severity="error">{errors.afterSubmit.message}</Alert>
-        )}
-        <Stack direction={"row"} alignItems={"center"}>
-          <IconButton onClick={handleBack}>
-            <ArrowArcLeft size={20} />
-          </IconButton>
-          <Typography variant="h4">Thông tin tài khoản</Typography>
-        </Stack>
-        <Stack
-          direction={{ sx: "column", md: "row" }}
-          spacing={2}
-          justifyContent={"flex-start"}
-          width={"100%"}
-        >
-          <Paper
-            sx={{
-              p: 2,
-              minWidth: "200px",
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-            }}
+        <Stack spacing={2}>
+          {!!errors.afterSubmit && (
+            <Alert severity="error">{errors.afterSubmit.message}</Alert>
+          )}
+          <Stack direction={"row"} alignItems={"center"}>
+            <IconButton onClick={handleBack}>
+              <ArrowArcLeft size={20} />
+            </IconButton>
+            <Typography variant="h4">Tạo tài khoản</Typography>
+          </Stack>
+          <Stack
+            direction={{ sx: "column", md: "row" }}
+            spacing={2}
+            justifyContent={"flex-start"}
+            width={"100%"}
           >
-            <Typography variant="h3" sx={{ fontSize: "1.25rem", mb: 1, mt: 1 }}>
-              Người dùng mới
-            </Typography>
-            <Stack spacing={2} justifyContent={"space-between"} width={"100%"}>
-              <RHFTextField name="username" label="Tên đăng nhập" />
-              <RHFTextField name="password" type="password" label="Mật khẩu" />
-              {/* <RHFTextField
+            <Paper
+              sx={{
+                p: 2,
+                minWidth: "200px",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+              }}
+            >
+              <Typography
+                variant="h3"
+                sx={{ fontSize: "1.25rem", mb: 1, mt: 1 }}
+              >
+                Người dùng mới
+              </Typography>
+              <Stack
+                spacing={2}
+                justifyContent={"space-between"}
+                width={"100%"}
+              >
+                <RHFTextField name="username" label="Tên đăng nhập" />
+                <RHFTextField
+                  name="password"
+                  type="password"
+                  label="Mật khẩu"
+                />
+                {/* <RHFTextField
                 name="password"
                 label="Mật khẩu"
                 fullWidth
@@ -212,46 +203,49 @@ const CreateAccount = () => {
                   ),
                 }}
               /> */}
-              <RHFMultiSelect
-                multiple={true}
-                name="roles"
-                options={roleOptions}
-                label="Vai"
-              />
-            </Stack>
-          </Paper>
-          <Paper
-            sx={{
-              p: 2,
-              width: "100%",
-              display: "flex",
-              flexDirection: "column",
-              gap: "16px",
-            }}
-          >
-            <Stack direction={"row"} spacing={2} alignItems={"center"}>
-              <Typography variant="h3" sx={{ fontSize: "1.25rem", mb: 1 }}>
-                Khu vực mới
-              </Typography>
-              <IconButton
-                onClick={() =>
-                  append({ name: "", sensors: Object.values(SENSORS) })
-                }
-              >
-                <PlusCircle size={20} />
-              </IconButton>
-            </Stack>
-            <Grid container spacing={2}>
-              {fields.map((field, index) => (
-                <AreaItem
-                  key={field.id}
-                  {...{ field, index, remove, control }}
+                <RHFMultiSelect
+                  multiple={true}
+                  name="roles"
+                  options={roleOptions}
+                  label="Vai trò"
                 />
-              ))}
-            </Grid>
-          </Paper>
+              </Stack>
+            </Paper>
+            <Paper
+              sx={{
+                p: 2,
+                width: "100%",
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+              }}
+            >
+              <Stack direction={"row"} spacing={2} alignItems={"center"}>
+                <Typography variant="h3" sx={{ fontSize: "1.25rem", mb: 1 }}>
+                  Khu vực mới
+                </Typography>
+                <IconButton
+                  onClick={() =>
+                    append({ name: "", sensors: Object.values(SENSORS) })
+                  }
+                >
+                  <PlusCircle size={20} />
+                </IconButton>
+              </Stack>
+              <Grid container spacing={2}>
+                {fields.map((field, index) => (
+                  <AreaItem
+                    key={field.id}
+                    {...{ field, index, remove, control }}
+                  />
+                ))}
+              </Grid>
+            </Paper>
+          </Stack>
+          <Button type="submit" variant="contained" sx={{ maxWidth: "150px" }}>
+            Nộp
+          </Button>
         </Stack>
-        <Button type="submit">Nộp</Button>
       </FormProvider>
     </>
   );

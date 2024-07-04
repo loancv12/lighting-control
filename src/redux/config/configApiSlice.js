@@ -11,12 +11,24 @@ export const configsApiSlice = apiSlice.injectEndpoints({
         },
       }),
       transformResponse: (responseData) => {
-        console.log("responseData", responseData);
         responseData.data.id = responseData.data._id;
         return responseData.data;
+      },
+      providesTags: (result, error, params) => {
+        return [{ type: "Config", id: result.id }];
+      },
+    }),
+    updateConfig: builder.mutation({
+      query: (body) => ({
+        url: "/config",
+        method: "PATCH",
+        body,
+      }),
+      invalidatesTags: (result, error, body) => {
+        return [{ type: "Config", id: body.configId }];
       },
     }),
   }),
 });
 
-export const { useGetConfigQuery } = configsApiSlice;
+export const { useGetConfigQuery, useUpdateConfigMutation } = configsApiSlice;

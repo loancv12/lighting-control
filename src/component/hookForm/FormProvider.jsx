@@ -7,15 +7,15 @@ const FormProvider = ({ children, onSubmit, methods }) => {
     <Form {...methods}>
       <Paper
         sx={{
-          marginTop: 2,
+          // marginTop: 2,
           padding: { xs: 2, md: 2 },
         }}
         component={"form"}
         onSubmit={onSubmit}
       >
-        <Stack alignItems={"flex-start"} spacing={3}>
-          {children}
-        </Stack>
+        {/* <Stack alignItems={"flex-start"} spacing={2}> */}
+        {children}
+        {/* </Stack> */}
       </Paper>
     </Form>
   );
