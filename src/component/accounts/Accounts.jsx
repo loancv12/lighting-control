@@ -197,7 +197,6 @@ function TableInside({ row }) {
 
   const handleAddArea = (e) => {
     handleClick(e);
-    console.log(row);
   };
   return (
     <>
@@ -212,7 +211,7 @@ function TableInside({ row }) {
         }}
         sx={{
           "& .MuiPaper-root": {
-            width: "600px",
+            width: { xs: "300px", md: "600px" },
           },
         }}
       >

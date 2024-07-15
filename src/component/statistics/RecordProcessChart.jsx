@@ -8,7 +8,7 @@ import {
 } from "phosphor-react";
 import React, { useContext, useEffect, useState } from "react";
 import Charts from "./Charts";
-import { onlyTime } from "../../utils/formatDate";
+import { onlyTime, onlyDate } from "../../utils/formatDate";
 import { memo } from "react";
 import ControlChart from "./ControlChart";
 import { defaultNumOfPoint } from "../../config/app";
@@ -28,7 +28,9 @@ const RecordProcessChart = memo(({ type, records, refetch }) => {
 
   const labels = chunk?.map((id) => {
     const record = records?.entities[id];
-    return onlyTime(record.createdAt);
+    return type === "PPFD"
+      ? onlyTime(record.createdAt)
+      : onlyDate(record.createdAt);
   });
 
   const naturals = chunk?.map((id) => {

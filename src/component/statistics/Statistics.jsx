@@ -32,7 +32,7 @@ const Statistics = () => {
     selectDate,
   };
   const {
-    data: ppfds,
+    data: ppfds = [],
     isLoading: isLdPpfd,
     isError: isErrorPpfd,
     refetch: refetchPpfd,
@@ -48,7 +48,7 @@ const Statistics = () => {
     ...selectDates,
   };
   const {
-    data: dlis,
+    data: dlis = [],
     isLoading: isLdDli,
     isError: isErrorDli,
     refetch: refetchDli,

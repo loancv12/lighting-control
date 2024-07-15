@@ -26,7 +26,6 @@ export const accountsApiSlice = apiSlice.injectEndpoints({
         return accountsAdapter.setAll(initialState, loadedAccounts);
       },
       providesTags: (result, error, arg) => {
-        console.log("result at get account", result);
         if (result?.ids) {
           return [
             { type: "Account", id: "LIST" },

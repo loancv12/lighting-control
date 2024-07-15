@@ -9,7 +9,6 @@ const Sidebar = () => {
   const selectedAreaId = useSelector(selectAreaId);
 
   const { data: areas, isLoading, isError } = useGetAreasQuery();
-  console.log(areas);
 
   const dispatch = useDispatch();
   const handleSelectArea = (areaId) => {
