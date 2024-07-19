@@ -55,13 +55,14 @@ const Statistics = () => {
   } = useGetRecordsInPeriodQuery(paramDlis);
 
   const onSubmitPpfd = (data) => {
-    setSelectDate(data.selectDate.toISOString());
+    console.log(typeof data.selectDate);
+    setSelectDate(data.selectDate.toString());
   };
 
   const onSubmitDli = (data) => {
     setSelectDates({
-      startDate: data.startDate.toISOString(),
-      endDate: data.endDate.toISOString(),
+      startDate: data.startDate.toString(),
+      endDate: data.endDate.toString(),
     });
   };
 

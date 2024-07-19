@@ -64,6 +64,10 @@ const RecordProcessChart = memo(({ type, records, refetch }) => {
     }
   };
 
+  useEffect(() => {
+    setPage(0);
+  }, [records]);
+
   return (
     <ControlChart
       {...{

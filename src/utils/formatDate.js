@@ -43,8 +43,8 @@ export function makeLowerRangeAndToISO(date) {
 
 export function getDateNow() {
   const today = new Date();
-  // return today;
-  return makeUpperRangeAndToISO(today);
+  today.setHours(0, 0, 0, 0);
+  return today.toString();
 }
 
 export function getDateNowAnd15Ago() {
@@ -53,8 +53,7 @@ export function getDateNowAnd15Ago() {
   let date15DaysAgo = sub(today, {
     days: 15,
   });
+  date15DaysAgo.setHours(0, 0, 0, 0);
 
-  date15DaysAgo = makeLowerRangeAndToISO(date15DaysAgo);
-
-  return { startDate: date15DaysAgo, endDate: today };
+  return { startDate: date15DaysAgo.toString(), endDate: today };
 }
