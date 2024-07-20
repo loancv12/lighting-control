@@ -11,7 +11,12 @@ import {
 import LoadingScreen from "../LoadingScreen";
 import SelectDate from "./SelectDate";
 import SelectDates from "./SelectDates";
-import { getDateNow, getDateNowAnd15Ago } from "../../utils/formatDate";
+import {
+  getDateNow,
+  getDateNowAnd15Ago,
+  makeLowerRangeAndToISO,
+  makeUpperRangeAndToISO,
+} from "../../utils/formatDate";
 import RecordProcessChart from "./RecordProcessChart";
 import { selectAreaId } from "../../redux/area/areaSlice";
 import { useSelector } from "react-redux";
@@ -23,13 +28,13 @@ import {
 const Statistics = () => {
   const selectedAreaId = useSelector(selectAreaId);
 
-  const [selectDates, setSelectDates] = useState(getDateNowAnd15Ago);
-  const [selectDate, setSelectDate] = useState(getDateNow);
+  const [selectInPeriod, setSelectInPeriod] = useState(getDateNowAnd15Ago);
+  const [selectInDay, setSelectInDay] = useState(getDateNow);
 
   const paramPpfds = {
     areaId: selectedAreaId,
     typeOfParameter: "ppfd",
-    selectDate,
+    ...selectInDay,
   };
   const {
     data: ppfds = [],
@@ -38,14 +43,12 @@ const Statistics = () => {
     refetch: refetchPpfd,
   } = useGetRecordsInDayQuery(paramPpfds, {
     pollingInterval: 15 * 60 * 1000, //15m
-
-    // skip: true,
   });
 
   const paramDlis = {
     areaId: selectedAreaId,
     typeOfParameter: "dli",
-    ...selectDates,
+    ...selectInPeriod,
   };
   const {
     data: dlis = [],
@@ -55,14 +58,17 @@ const Statistics = () => {
   } = useGetRecordsInPeriodQuery(paramDlis);
 
   const onSubmitPpfd = (data) => {
-    console.log(typeof data.selectDate);
-    setSelectDate(data.selectDate.toString());
+    console.log(data);
+    setSelectInDay({
+      startOfDay: makeLowerRangeAndToISO(data.selectDate),
+      endOfDay: makeUpperRangeAndToISO(data.selectDate),
+    });
   };
 
   const onSubmitDli = (data) => {
-    setSelectDates({
-      startDate: data.startDate.toString(),
-      endDate: data.endDate.toString(),
+    setSelectInPeriod({
+      startDate: makeLowerRangeAndToISO(data.startDate),
+      endDate: makeUpperRangeAndToISO(data.endDate),
     });
   };
 

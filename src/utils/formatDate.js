@@ -22,38 +22,42 @@ export const onlyDate = (date) => {
 };
 
 export function makeUpperRangeAndToISO(date) {
-  if (date instanceof Date) {
-    date.setUTCHours(23, 59, 59, 999);
+  date = new Date(date);
 
-    const solveDate = date.toISOString();
+  date.setHours(23, 59, 59, 999);
 
-    return solveDate;
-  } else throw new Error("Input must be instance of Date");
+  const solveDate = date.toISOString();
+
+  return solveDate;
 }
 
 export function makeLowerRangeAndToISO(date) {
-  if (date instanceof Date) {
-    date.setUTCHours(0, 0, 0, 0);
+  date = new Date(date);
+  date.setHours(0, 0, 0, 0);
 
-    const solveDate = date.toISOString();
+  const solveDate = date.toISOString();
 
-    return solveDate;
-  } else throw new Error("Input must be instance of Date");
+  return solveDate;
 }
 
 export function getDateNow() {
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  return today.toString();
+
+  return {
+    startOfDay: makeLowerRangeAndToISO(today),
+    endOfDay: makeUpperRangeAndToISO(today),
+  };
 }
 
 export function getDateNowAnd15Ago() {
-  const today = getDateNow();
+  const today = new Date();
 
-  let date15DaysAgo = sub(today, {
+  const date15DaysAgo = sub(today, {
     days: 15,
   });
-  date15DaysAgo.setHours(0, 0, 0, 0);
 
-  return { startDate: date15DaysAgo.toString(), endDate: today };
+  return {
+    startDate: makeLowerRangeAndToISO(date15DaysAgo),
+    endDate: makeUpperRangeAndToISO(today),
+  };
 }
