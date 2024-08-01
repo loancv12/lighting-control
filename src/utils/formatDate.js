@@ -17,7 +17,13 @@ export const onlyDate = (date) => {
     day: "numeric",
   };
   const dateF = new Date(date);
-  let formattedDate = Intl.DateTimeFormat("vi-VN", options).format(dateF);
+  const dateOneDayAgo = sub(dateF, {
+    days: 1,
+  });
+
+  let formattedDate = Intl.DateTimeFormat("vi-VN", options).format(
+    dateOneDayAgo
+  );
   return formattedDate;
 };
 
