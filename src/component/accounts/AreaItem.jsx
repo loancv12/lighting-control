@@ -15,7 +15,7 @@ export default function AreaItem({ field, index, name, control, remove }) {
   return (
     <Grid item xs={6} md={4} sx={{ position: "relative" }}>
       <Stack spacing={1}>
-        <RHFTextField name={`areas.${index}.name`} label="Tên khu vực" />
+        <RHFTextField name={`areas.${index}.name`} label="Tên nhà màng" />
         <RHFMultiSelect
           multiple={true}
           name={`areas.${index}.sensors`}

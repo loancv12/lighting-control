@@ -25,12 +25,12 @@ const Sidebar = () => {
         <>
           {!selectedAreaId ? (
             <Typography variant="h2" sx={{ fontSize: "1rem", mb: "8px" }}>
-              Đầu tiên, bạn phải chọn khu vực:
+              Đầu tiên, bạn phải chọn nhà màng:
             </Typography>
           ) : null}
           <Stack direction={"row"} alignItems={"center"} spacing={2}>
             <Typography variant="h2" sx={{ fontSize: "1rem" }}>
-              Khu vực:
+              Nhà màng:
             </Typography>
 
             <ButtonGroup variant="contained" aria-label="Area list">
@@ -53,7 +53,7 @@ const Sidebar = () => {
         </>
       );
     } else {
-      content = <Typography>Bạn không sở hữu khu vực nào</Typography>;
+      content = <Typography>Bạn không sở hữu nhà màng nào</Typography>;
     }
   }
   return content;

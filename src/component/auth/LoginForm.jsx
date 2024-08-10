@@ -22,6 +22,8 @@ import FormProvider from "../hookForm/FormProvider";
 import { setCredentials } from "../../redux/auth/authSlice";
 import { SnackbarContext } from "../../context/SnackbarProvider";
 import LoadingScreen from "../LoadingScreen";
+import useAuth from "../../hooks/useAuth";
+import { jwtDecode } from "jwt-decode";
 
 const LoginForm = () => {
   const { handleOpenSnackbar } = useContext(SnackbarContext);
@@ -64,7 +66,11 @@ const LoginForm = () => {
       const { accessToken } = await login(data).unwrap();
       dispatch(setCredentials({ accessToken }));
       handleOpenSnackbar({ message: "Login successfully" });
-      navigate("/");
+      const decoded = jwtDecode(accessToken);
+      const { username, roles } = decoded.userInfo;
+      const isAdmin = roles.includes("admin");
+
+      navigate(isAdmin ? "/accounts" : "/");
     } catch (error) {
       console.log(error);
       reset();

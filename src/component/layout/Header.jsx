@@ -32,7 +32,7 @@ const menu = [
 const authMenu = [
   {
     path: "/accounts",
-    title: "Người dùng",
+    title: "Quản lý người dùng",
   },
 ];
 
@@ -63,7 +63,7 @@ const Header = () => {
               <img src={"/logo.svg"} alt="Lighting control" />
             </Avatar>
           </Link>
-          {menu.map((el, i) => (
+          {/* {menu.map((el, i) => (
             <NavLink key={i} to={el.path}>
               {({ isActive, isPending, isTransitioning }) => (
                 <Button variant={isActive ? "contained" : "text"}>
@@ -71,7 +71,7 @@ const Header = () => {
                 </Button>
               )}
             </NavLink>
-          ))}
+          ))} */}
           {isAdmin
             ? authMenu.map((el, i) => (
                 <NavLink key={i} to={el.path}>
@@ -82,7 +82,15 @@ const Header = () => {
                   )}
                 </NavLink>
               ))
-            : null}
+            : menu.map((el, i) => (
+                <NavLink key={i} to={el.path}>
+                  {({ isActive, isPending, isTransitioning }) => (
+                    <Button variant={isActive ? "contained" : "text"}>
+                      {el.title}
+                    </Button>
+                  )}
+                </NavLink>
+              ))}
           <Button variant={"text"} onClick={handleLogout}>
             Thoát
           </Button>

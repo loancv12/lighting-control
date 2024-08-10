@@ -221,14 +221,14 @@ function TableInside({ row }) {
         <TableHead>
           <TableRow>
             <TableCell>
-              <Tooltip title="Thêm khu vực">
+              <Tooltip title="Thêm nhà màng">
                 <IconButton aria-describedby={id} onClick={handleAddArea}>
                   <PlusCircle size={20} />
                 </IconButton>
               </Tooltip>
             </TableCell>
             <TableCell>Id</TableCell>
-            <TableCell>Tên khu vực</TableCell>
+            <TableCell>Tên nhà màng</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -281,9 +281,9 @@ function Row(props) {
             ) : null}
           </IconButton>
         </TableCell>
-        <TableCell>
+        {/* <TableCell>
           {row.roles.map((role) => ViRoles[capitalize(role)]).join()}
-        </TableCell>
+        </TableCell> */}
         <TableCell>{row.username}</TableCell>
       </StyledTableRow>
       <TableRow>
@@ -334,7 +334,7 @@ export default function Accounts() {
                 </Tooltip>
               </TableCell>
               <TableCell>Id</TableCell>
-              <TableCell>Vai trò</TableCell>
+              {/* <TableCell>Vai trò</TableCell> */}
               <TableCell>Tên người dùng</TableCell>
             </TableRow>
           </TableHead>

@@ -41,12 +41,12 @@ const AddAreaForm = ({ user, onClose }) => {
 
   const areaSchema = Yup.object({
     name: Yup.string()
-      .min(4, "Tên khu vực phải có 4-14 kí tự")
-      .max(14, "Tên khu vực phải có 4-14 kí tự")
-      .required("Tên khu vực là trường bắt buộc"),
+      .min(4, "Tên nhà màng phải có 4-14 kí tự")
+      .max(14, "Tên nhà màng phải có 4-14 kí tự")
+      .required("Tên nhà màng là trường bắt buộc"),
     sensors: Yup.array()
       .of(Yup.string().oneOf(Object.values(SENSORS)))
-      .min(1, "Ban phải chọn ít nhất một loại sensor cho khu vực"),
+      .min(1, "Ban phải chọn ít nhất một loại sensor cho nhà màng"),
   });
 
   const schema = Yup.object({
@@ -65,7 +65,7 @@ const AddAreaForm = ({ user, onClose }) => {
           if (duplicateIndex !== -1)
             return context.createError({
               path: `areas.[${duplicateIndex}].name`,
-              message: "Tên khu vực không được trùng với những khu vực đã có",
+              message: "Tên nhà màng không được trùng với những nhà màng đã có",
             });
           return true;
         },
@@ -129,7 +129,7 @@ const AddAreaForm = ({ user, onClose }) => {
             width={"100%"}
           >
             <Typography variant="h3" sx={{ fontSize: "1.25rem", mb: 1 }}>
-              Khu vực mới
+              Nhà màng mới
             </Typography>
             <IconButton
               onClick={() =>

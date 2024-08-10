@@ -54,12 +54,12 @@ const CreateAccount = () => {
 
   const areaSchema = Yup.object({
     name: Yup.string()
-      .min(4, "Tên khu vực phải có 4-14 kí tự")
-      .max(14, "Tên khu vực phải có 4-14 kí tự")
-      .required("Tên khu vực là trường bắt buộc"),
+      .min(4, "Tên nhà màng phải có 4-14 kí tự")
+      .max(14, "Tên nhà màng phải có 4-14 kí tự")
+      .required("Tên nhà màng là trường bắt buộc"),
     sensors: Yup.array()
       .of(Yup.string().oneOf(Object.values(SENSORS)))
-      .min(1, "Ban phải chọn ít nhất một loại sensor cho khu vực"),
+      .min(1, "Ban phải chọn ít nhất một loại sensor cho nhà màng"),
   });
   const accountSchema = Yup.object({
     username: Yup.string()
@@ -86,7 +86,7 @@ const CreateAccount = () => {
           if (duplicateIndex !== -1)
             return context.createError({
               path: `areas.[${duplicateIndex}].name`,
-              message: "Tên khu vực không được trùng",
+              message: "Tên nhà màng không được trùng",
             });
           return true;
         },
@@ -203,12 +203,12 @@ const CreateAccount = () => {
                   ),
                 }}
               /> */}
-                <RHFMultiSelect
+                {/* <RHFMultiSelect
                   multiple={true}
                   name="roles"
                   options={roleOptions}
                   label="Vai trò"
-                />
+                /> */}
               </Stack>
             </Paper>
             <Paper
@@ -222,7 +222,7 @@ const CreateAccount = () => {
             >
               <Stack direction={"row"} spacing={2} alignItems={"center"}>
                 <Typography variant="h3" sx={{ fontSize: "1.25rem", mb: 1 }}>
-                  Khu vực mới
+                  Nhà màng mới
                 </Typography>
                 <IconButton
                   onClick={() =>
