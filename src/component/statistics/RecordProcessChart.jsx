@@ -51,8 +51,10 @@ const RecordProcessChart = memo(({ type, records, refetch }) => {
     } else {
       const transformData = records.ids.map((id) => {
         const { oldRecord, newRecord, createdAt } = records.entities[id];
+        const time = new Date(createdAt);
+        const timeVN = time.toLocaleTimeString("VN-vi");
         return {
-          "Thời gian": createdAt,
+          "Thời gian": timeVN,
           [`${type} tự nhiên`]: oldRecord,
           [`${type} sau khi bổ sung`]: newRecord,
         };
