@@ -1,29 +1,21 @@
-import React, { useEffect, useState } from "react";
+import { Divider, Stack, Typography } from "@mui/material";
+import React, { useState } from "react";
+import { useSelector } from "react-redux";
+import { selectAreaId } from "../../redux/area/areaSlice";
 import {
-  Box,
-  Button,
-  CircularProgress,
-  IconButton,
-  Stack,
-  Divider,
-  Typography,
-} from "@mui/material";
-import LoadingScreen from "../LoadingScreen";
-import SelectDate from "./SelectDate";
-import SelectDates from "./SelectDates";
+  useGetRecordsInDayQuery,
+  useGetRecordsInPeriodQuery,
+} from "../../redux/sensorRecord/sensorRecSliceApi";
 import {
   getDateNow,
   getDateNowAnd15Ago,
   makeLowerRangeAndToISO,
   makeUpperRangeAndToISO,
 } from "../../utils/formatDate";
+import LoadingScreen from "../LoadingScreen";
 import RecordProcessChart from "./RecordProcessChart";
-import { selectAreaId } from "../../redux/area/areaSlice";
-import { useSelector } from "react-redux";
-import {
-  useGetRecordsInDayQuery,
-  useGetRecordsInPeriodQuery,
-} from "../../redux/sensorRecord/sensorRecSliceApi";
+import SelectDate from "./SelectDate";
+import SelectDates from "./SelectDates";
 
 const Statistics = () => {
   const selectedAreaId = useSelector(selectAreaId);
@@ -38,7 +30,8 @@ const Statistics = () => {
   };
   const {
     data: ppfds = [],
-    isLoading: isLdPpfd,
+
+    isFetching: isLdPpfd,
     isError: isErrorPpfd,
     refetch: refetchPpfd,
   } = useGetRecordsInDayQuery(paramPpfds, {
@@ -52,7 +45,7 @@ const Statistics = () => {
   };
   const {
     data: dlis = [],
-    isLoading: isLdDli,
+    isFetching: isLdDli,
     isError: isErrorDli,
     refetch: refetchDli,
   } = useGetRecordsInPeriodQuery(paramDlis);
